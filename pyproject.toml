@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "duolingo"
+version = "0.1.0"
+description = ""
+authors = ["Vladimir Viazovetskov <erhosen@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+PyAutoGUI = "^0.9.54"
+pytesseract = "^0.3.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.4"
+pre-commit = "^3.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
