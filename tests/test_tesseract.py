@@ -1,7 +1,7 @@
 from PIL import Image
 
-from constance import LANG_DEU, LANG_RUS
-from ocr import process_image_tesseract
+from constants import LANG_DEU, LANG_RUS
+from helpers.ocr import process_image_tesseract
 
 
 def test_ihr():

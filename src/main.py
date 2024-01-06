@@ -1,4 +1,4 @@
-from screens.start import StartScreen
+from screen import StartScreen
 
 
 def main():
@@ -25,5 +25,4 @@ if __name__ == "__main__":
 
 # Todo: make counter for long sleep
 # TODO: loguru instead of print
-# Todo: писать слово которое не удалось распознать, и давать возможность его перевести
 # Todo: Не хотите вернуться на уровень 1?

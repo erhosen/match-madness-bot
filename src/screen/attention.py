@@ -11,8 +11,8 @@ class AttentionScreen:
         self.chapter = chapter
 
     def next(self):
-        from screens.game import GameScreen
-        from screens.finish import FinishScreen
+        from screen.game import GameScreen
+        from screen.finish import FinishScreen
 
         pyautogui.click(*self.NEXT_BUTTON)
         time.sleep(0.5)

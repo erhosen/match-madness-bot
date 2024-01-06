@@ -3,7 +3,7 @@ import time
 import pyautogui
 from PIL.Image import Image
 
-from constance import (
+from constants import (
     LANG_RUS,
     LANG_DEU,
     LEVELS_CONFIG,
@@ -11,10 +11,10 @@ from constance import (
     TILE_HEIGHT,
     DISTANCE_BETWEEN_TILES,
 )
-from ocr import process_image_tesseract
-from screens.attention import AttentionScreen
-from tesaurus import Translation, tesaurus
-from utils import input_with_timeout, TimeoutExpired, take_screenshot
+from helpers.ocr import process_image_tesseract
+from screen.attention import AttentionScreen
+from helpers.tesaurus import Translation, tesaurus
+from helpers.utils import input_with_timeout, TimeoutExpired, take_screenshot
 
 
 class VirtualKeyboard:
