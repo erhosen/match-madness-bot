@@ -3,7 +3,7 @@ import time
 import pyautogui
 
 from helpers.ocr import get_number_from_image
-from src.screen.attention import AttentionScreen
+from screen.attention import AttentionScreen
 from helpers.utils import take_screenshot
 
 
@@ -12,7 +12,7 @@ class StartScreen:
 
     def __init__(self):
         self.screenshot = take_screenshot()
-        self.screenshot.save("img/screen/start.png")
+        self.screenshot.save("images/screen/start.png")
 
     def determine_lvl(self) -> int:
         # screenshot = self.screenshot.convert('L')
@@ -21,15 +21,15 @@ class StartScreen:
         screenshot = screenshot.point(lambda x: (255 - x) * 1.5)
 
         lvl1_checkbox = screenshot.crop((230, 475, 260, 500))
-        # lvl1_checkbox.save('img/checkbox/lvl1.png')
+        # lvl1_checkbox.save('images/checkbox/lvl1.png')
         lvl2_checkbox = screenshot.crop((370, 475, 400, 500))
-        # lvl2_checkbox.save('img/checkbox/lvl2.png')
+        # lvl2_checkbox.save('images/checkbox/lvl2.png')
         lvln_checkbox = screenshot.crop((510, 475, 540, 500))
-        # lvln_checkbox.save("img/checkbox/lvln.png")
+        # lvln_checkbox.save("images/checkbox/lvln.png")
         lvl8_checkbox = screenshot.crop((650, 475, 680, 500))
-        # lvl8_checkbox.save("img/checkbox/lvl8.png")
+        # lvl8_checkbox.save("images/checkbox/lvl8.png")
         lvl9_checkbox = screenshot.crop((790, 475, 820, 500))
-        # lvl9_checkbox.save("img/checkbox/lvl9.png")
+        # lvl9_checkbox.save("images/checkbox/lvl9.png")
 
         for checkbox in (
             lvl1_checkbox,

@@ -3,7 +3,7 @@ import time
 import pyautogui
 from PIL.Image import Image
 
-from constants import (
+from helpers.constants import (
     LANG_RUS,
     LANG_DEU,
     LEVELS_CONFIG,
@@ -146,7 +146,6 @@ class GameScreen:
                 self.deu_keyboard.reload(deu_images)
 
     def get_images(self):
-        # TODO: reduce region to words only
         screenshot = take_screenshot()
         # Grayscale
         screenshot = screenshot.convert("L")
