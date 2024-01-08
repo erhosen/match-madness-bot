@@ -2,7 +2,7 @@ import time
 
 from helpers.ocr import get_number_from_image
 from screen.attention import AttentionScreen
-from helpers.utils import take_screenshot, click
+from helpers.utils import take_screenshot, click, save_image
 
 
 class StartScreen:
@@ -10,24 +10,23 @@ class StartScreen:
 
     def __init__(self):
         self.screenshot = take_screenshot()
-        self.screenshot.save("images/screen/start.png")
+        save_image(self.screenshot, "screen/start.png")
 
     def determine_lvl(self) -> int:
-        # screenshot = self.screenshot.convert('L')
         # invert colors && increase contrast
         screenshot = self.screenshot.convert("L")
         screenshot = screenshot.point(lambda x: (255 - x) * 1.3)
 
         lvl1_checkbox = screenshot.crop((230, 475, 260, 500))
-        # lvl1_checkbox.save('images/checkbox/lvl1.png')
         lvl2_checkbox = screenshot.crop((370, 475, 400, 500))
-        # lvl2_checkbox.save('images/checkbox/lvl2.png')
         lvln_checkbox = screenshot.crop((510, 475, 540, 500))
-        # lvln_checkbox.save("checkbox_lvln.png")
         lvl8_checkbox = screenshot.crop((650, 475, 680, 500))
-        # lvl8_checkbox.save("images/checkbox/lvl8.png")
         lvl9_checkbox = screenshot.crop((790, 475, 820, 500))
-        # lvl9_checkbox.save("images/checkbox/lvl9.png")
+        # save_image(lvl1_checkbox, "checkbox/lvl1.png")
+        # save_image(lvl2_checkbox, "checkbox/lvl2.png")
+        # save_image(lvln_checkbox, "checkbox/lvln.png")
+        # save_image(lvl8_checkbox, "checkbox/lvl8.png")
+        # save_image(lvl9_checkbox, "checkbox/lvl9.png")
 
         for checkbox in (
             lvl1_checkbox,

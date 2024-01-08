@@ -13,7 +13,13 @@ from helpers.constants import (
 from helpers.ocr import process_image_tesseract
 from screen.attention import AttentionScreen
 from helpers.tesaurus import Translation, tesaurus
-from helpers.utils import input_with_timeout, TimeoutExpired, take_screenshot, click
+from helpers.utils import (
+    input_with_timeout,
+    TimeoutExpired,
+    take_screenshot,
+    click,
+    save_image,
+)
 
 
 class VirtualKeyboard:
@@ -83,7 +89,7 @@ class VirtualKeyboard:
             print(idx, word if word else "")
         for idx, image in self.images.items():
             if image:
-                image.save(f"images/words/{self.lang}_{idx}.png")
+                save_image(image, f"words/{self.lang}_{idx}.png")
 
 
 class GameScreen:
@@ -178,7 +184,7 @@ class GameScreen:
 if __name__ == "__main__":
     game = GameScreen(lvl=1, chapter=0)
     r_images, d_images = game.get_images()
-    for idx, image in enumerate(r_images):
-        image.save(f"../img/words/rus_{idx}.png")
-    for idx, image in enumerate(d_images):
-        image.save(f"../img/words/deu_{idx}.png")
+    for idx in range(len(r_images)):
+        rus_image, deu_image = r_images[idx], d_images[idx]
+        save_image(rus_image, f"words/rus_{idx}.png")
+        save_image(deu_image, f"words/deu_{idx}.png")

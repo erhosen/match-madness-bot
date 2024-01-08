@@ -4,11 +4,12 @@ import time
 from functools import wraps
 
 import pyautogui
-from PIL.Image import Image
+from PIL import Image
 from pathlib import Path
 
 CUR_DIR = Path(__file__).parent
 PROJECT_DIR = CUR_DIR.parent
+IMAGES_DIR = PROJECT_DIR / "data" / "images"
 
 
 class TimeoutExpired(Exception):
@@ -49,7 +50,7 @@ match SCREEN_RESOLUTION:
 DUOLINGO_WINDOW = (0, MENUBAR_HEIGHT, 1050, 786)
 
 
-def take_screenshot() -> Image:
+def take_screenshot() -> Image.Image:
     screenshot = pyautogui.screenshot(region=DUOLINGO_WINDOW)
     # assert screenshot.size == (1050, 786)
     return screenshot
@@ -69,9 +70,14 @@ def get_pixel(x: int, y: int) -> tuple[int, int, int]:
     Screen agnostic.
     """
     screenshot = take_screenshot()
-    # screenshot.save(PROJECT_DIR / "images/screen.png")
+    # save_screenshot(screenshot, "screen.png")
     pixel = screenshot.getpixel((x, y))
     return pixel[0], pixel[1], pixel[2]
 
 
-# TODO: make save_screenshot universal function
+def save_image(image: Image.Image, name: str) -> None:
+    image.save(IMAGES_DIR / name)
+
+
+def open_image(name: str) -> Image.Image:
+    return Image.open(IMAGES_DIR / name)
