@@ -1,6 +1,6 @@
 import time
 
-from helpers.utils import click
+from helpers.utils import click, take_screenshot
 from screen.start import StartScreen
 
 
@@ -12,12 +12,17 @@ class FinishScreen:
 
     def next(self):
         from screen.intermediate import IntermediateScreen
+        from screen.extreme import ExtremeScreen
 
         click(*self.NEXT_BUTTON)
         time.sleep(6)
 
         if IntermediateScreen.is_current():
             return IntermediateScreen()
+
+        screenshot = take_screenshot()
+        if ExtremeScreen.is_current(screenshot):
+            return ExtremeScreen()
 
         return StartScreen()
 

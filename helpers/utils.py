@@ -64,6 +64,11 @@ def click(x: int, y: int) -> None:
     pyautogui.click(x, y + MENUBAR_HEIGHT)
 
 
+def get_image_pixel(image: Image.Image, x: int, y: int) -> tuple[int, int, int]:
+    _pixel = image.getpixel((x, y))
+    return _pixel[0], _pixel[1], _pixel[2]
+
+
 def get_pixel(x: int, y: int) -> tuple[int, int, int]:
     """Get pixel color on x, y coordinates.
 

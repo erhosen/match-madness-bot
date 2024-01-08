@@ -1,6 +1,6 @@
 import time
 
-from helpers.utils import click, get_pixel
+from helpers.utils import click, get_pixel, take_screenshot
 from screen.start import StartScreen
 
 
@@ -9,7 +9,6 @@ class IntermediateScreen:
     DUOLINGO_BLUE_1 = (70, 182, 243)
     DUOLINGO_BLUE_2 = (108, 190, 243)
     DUOLINGO_BLUE_3 = (107, 190, 243)
-    DUOLINGO_WHITE = (255, 255, 255)
 
     def __init__(self):
         pass
@@ -23,12 +22,13 @@ class IntermediateScreen:
             cls.DUOLINGO_BLUE_1,
             cls.DUOLINGO_BLUE_2,
             cls.DUOLINGO_BLUE_3,
-            cls.DUOLINGO_WHITE,
         ):
             return True
         return False
 
     def next(self):
+        from screen.extreme import ExtremeScreen
+
         print("Intermediate screen found, clicking next button")
         click(*self.NEXT_BUTTON)
         time.sleep(6)
@@ -36,6 +36,10 @@ class IntermediateScreen:
         if self.is_current():
             # the next screen is also intermediate, what a surprise
             return IntermediateScreen()
+
+        screenshot = take_screenshot()
+        if ExtremeScreen.is_current(screenshot):
+            return ExtremeScreen()
 
         return StartScreen()
 

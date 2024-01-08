@@ -45,13 +45,14 @@ class StartScreen:
 
         Wait for next screen.
         """
+        from screen.double_points import DoublePointsScreen
+
         lvl = self.determine_lvl()
         print(f"Starting with lvl {lvl}")
 
         click(*self.START_BUTTON)
         time.sleep(4)
+        if DoublePointsScreen.is_current():
+            return DoublePointsScreen(lvl=lvl, chapter=0)
+
         return AttentionScreen(lvl=lvl, chapter=0)
-
-
-# TODO: StartSceen -> AttentionScreen -> GameScreen
-# TODO: StartSceen -> InermediateScreen -> AttentionScreen -> GameScreen
