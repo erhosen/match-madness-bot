@@ -1,6 +1,5 @@
 import time
 
-import pyautogui
 from PIL.Image import Image
 
 from helpers.constants import (
@@ -14,7 +13,7 @@ from helpers.constants import (
 from helpers.ocr import process_image_tesseract
 from screen.attention import AttentionScreen
 from helpers.tesaurus import Translation, tesaurus
-from helpers.utils import input_with_timeout, TimeoutExpired, take_screenshot
+from helpers.utils import input_with_timeout, TimeoutExpired, take_screenshot, click
 
 
 class VirtualKeyboard:
@@ -22,6 +21,7 @@ class VirtualKeyboard:
         "rus": 365,
         "deu": 690,
     }
+    Y0 = 266
     Y_SHIFT = 70
 
     def __init__(self, lang: str, images: list[Image]):
@@ -72,8 +72,7 @@ class VirtualKeyboard:
         return self.X_SHIFT[self.lang]
 
     def click_on_idx(self, idx: int) -> None:
-        word_coords = self.x_shift, 320 + idx * self.Y_SHIFT
-        pyautogui.click(*word_coords)
+        click(self.x_shift, self.Y0 + idx * self.Y_SHIFT)
 
         self.words[idx] = None
         self.images[idx] = None
@@ -84,7 +83,7 @@ class VirtualKeyboard:
             print(idx, word if word else "")
         for idx, image in self.images.items():
             if image:
-                image.save(f"img/words/{self.lang}_{idx}.png")
+                image.save(f"images/words/{self.lang}_{idx}.png")
 
 
 class GameScreen:

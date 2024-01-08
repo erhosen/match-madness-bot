@@ -1,12 +1,11 @@
 import time
 
-import pyautogui
-
+from helpers.utils import click
 from screen.start import StartScreen
 
 
 class FinishScreen:
-    NEXT_BUTTON = 530, 810
+    NEXT_BUTTON = 530, 756
 
     def __init__(self):
         pass
@@ -14,7 +13,7 @@ class FinishScreen:
     def next(self):
         from screen.intermediate import IntermediateScreen
 
-        pyautogui.click(*self.NEXT_BUTTON)
+        click(*self.NEXT_BUTTON)
         time.sleep(6)
 
         if IntermediateScreen.is_current():

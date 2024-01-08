@@ -23,6 +23,11 @@ if __name__ == "__main__":
     main()
 
 
-# Todo: make counter for long sleep
+# TODO: make counter for long sleep
 # TODO: loguru instead of print
-# Todo: Не хотите вернуться на уровень 1?
+# TODO: Не хотите вернуться на уровень 1?
+# TODO: СКОРОСТЬ
+# TODO: КАЧЕСТВО
+# TODO: Сохранять всегда оригиналы, чтобы можно было писать тесты
+# TODO: Больше тестов
+# TODO: Переместить images в data

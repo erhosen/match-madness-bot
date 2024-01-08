@@ -1,10 +1,11 @@
 import time
 
-import pyautogui
+
+from helpers.utils import click
 
 
 class AttentionScreen:
-    NEXT_BUTTON = 730, 800
+    NEXT_BUTTON = 730, 746
 
     def __init__(self, lvl: int, chapter: int):
         self.lvl = lvl
@@ -14,7 +15,7 @@ class AttentionScreen:
         from screen.game import GameScreen
         from screen.finish import FinishScreen
 
-        pyautogui.click(*self.NEXT_BUTTON)
+        click(*self.NEXT_BUTTON)
         time.sleep(0.5)
         if self.chapter < 3:
             return GameScreen(lvl=self.lvl, chapter=self.chapter)

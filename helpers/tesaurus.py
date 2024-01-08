@@ -43,3 +43,7 @@ class Tesaurus:
 
 
 tesaurus = Tesaurus("rus-deu.json")
+
+
+if __name__ == "__main__":
+    tesaurus.save()
