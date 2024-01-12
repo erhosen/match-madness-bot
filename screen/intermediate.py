@@ -1,20 +1,17 @@
 import time
 
 from helpers.utils import click, get_pixel, take_screenshot
-from screen.start import StartScreen
+from screen._base import BaseScreen
 
 
-class IntermediateScreen:
+class IntermediateScreen(BaseScreen):
     NEXT_BUTTON = 630, 746
     DUOLINGO_BLUE_1 = (70, 182, 243)
     DUOLINGO_BLUE_2 = (108, 190, 243)
     DUOLINGO_BLUE_3 = (107, 190, 243)
 
-    def __init__(self):
-        pass
-
     @classmethod
-    def is_current(cls):
+    def is_current(cls, screenshot=None) -> bool:
         intermediate_button_color = get_pixel(*cls.NEXT_BUTTON)
         # print(f"intermediate_button_color: {intermediate_button_color}")
         # if screen has blue "next button", it's probably some intermediate screen, like "Rating Up"
@@ -28,6 +25,7 @@ class IntermediateScreen:
 
     def next(self):
         from screen.extreme import ExtremeScreen
+        from screen.start import StartScreen
 
         print("Intermediate screen found, clicking next button")
         click(*self.NEXT_BUTTON)

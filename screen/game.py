@@ -11,7 +11,7 @@ from helpers.constants import (
     DISTANCE_BETWEEN_TILES,
 )
 from helpers.ocr import process_image_tesseract
-from screen.attention import AttentionScreen
+from screen._base import BaseScreen
 from helpers.tesaurus import Translation, tesaurus
 from helpers.utils import (
     input_with_timeout,
@@ -92,7 +92,7 @@ class VirtualKeyboard:
                 save_image(image, f"words/{self.lang}_{idx}.png")
 
 
-class GameScreen:
+class GameScreen(BaseScreen):
     WORKING_AREA = (0, 0, 836, 611)
 
     def __init__(self, lvl: int, chapter: int):
@@ -102,6 +102,7 @@ class GameScreen:
         rus_images, deu_images = self.get_images()
         self.rus_keyboard = VirtualKeyboard(LANG_RUS, rus_images)
         self.deu_keyboard = VirtualKeyboard(LANG_DEU, deu_images)
+        super().__init__()
 
     def process_word(self, rus_word: str) -> int:
         translation = tesaurus.get_translation(rus_word)
@@ -110,7 +111,8 @@ class GameScreen:
             and (deu_index := self.deu_keyboard.get_translation_idx(translation))
             is not None
         ):
-            print(f"Found translation for [{rus_word}]: {translation}")
+            # print(f"Found translation for [{rus_word}]: {translation}")
+            pass
         else:
             print(f"\nNo translation found for [{rus_word}]")
             self.deu_keyboard.print()
@@ -175,7 +177,13 @@ class GameScreen:
 
         return [rus_images, deu_images]
 
+    @classmethod
+    def is_current(cls, screenshot: Image) -> bool:
+        raise NotImplementedError
+
     def next(self):
+        from screen.attention import AttentionScreen
+
         self.process_chapter()
         time.sleep(1)
         return AttentionScreen(lvl=self.lvl, chapter=self.chapter + 1)

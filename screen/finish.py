@@ -1,18 +1,22 @@
 import time
 
+from PIL.Image import Image
+
 from helpers.utils import click, take_screenshot
-from screen.start import StartScreen
+from screen._base import BaseScreen
 
 
-class FinishScreen:
+class FinishScreen(BaseScreen):
     NEXT_BUTTON = 530, 756
 
-    def __init__(self):
-        pass
+    @classmethod
+    def is_current(cls, screenshot: Image) -> bool:
+        raise NotImplementedError
 
     def next(self):
         from screen.intermediate import IntermediateScreen
         from screen.extreme import ExtremeScreen
+        from screen.start import StartScreen
 
         click(*self.NEXT_BUTTON)
         time.sleep(6)

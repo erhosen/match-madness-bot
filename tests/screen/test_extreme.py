@@ -6,10 +6,11 @@ import pytest
 @pytest.mark.parametrize(
     "filename, expected",
     [
-        ("screen/extreme.png", True),
-        ("screen/start.png", False),
+        ("screen/_extreme.png", True),
+        ("screen/_attention.png", False),
+        ("screen/_start.png", False),
     ],
 )
-def test_extreme_screen_is_current(filename: str, expected: bool) -> None:
+def test_is_current(filename: str, expected: bool) -> None:
     screenshot = open_image(filename)
     assert ExtremeScreen.is_current(screenshot) == expected

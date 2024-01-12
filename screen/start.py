@@ -1,21 +1,20 @@
 import time
 
+from PIL.Image import Image
+
 from helpers.ocr import get_number_from_image
+from screen._base import BaseScreen
 from screen.attention import AttentionScreen
-from helpers.utils import take_screenshot, click, save_image
+from helpers.utils import click, take_screenshot
 
 
-class StartScreen:
+class StartScreen(BaseScreen):
     START_BUTTON = 530, 756
 
-    def __init__(self):
-        self.screenshot = take_screenshot()
-        save_image(self.screenshot, "screen/start.png")
-
-    def determine_lvl(self) -> int:
+    @staticmethod
+    def determine_lvl(screenshot: Image) -> int:
         # invert colors && increase contrast
-        screenshot = self.screenshot.convert("L")
-        screenshot = screenshot.point(lambda x: (255 - x) * 1.3)
+        # screenshot = screenshot.point(lambda x: (255 - x) * 1.3)
 
         lvl1_checkbox = screenshot.crop((230, 475, 260, 500))
         lvl2_checkbox = screenshot.crop((370, 475, 400, 500))
@@ -40,6 +39,14 @@ class StartScreen:
 
         raise ValueError("Can't determine level")
 
+    @classmethod
+    def is_current(cls, screenshot: Image) -> bool:
+        try:
+            cls.determine_lvl(screenshot)
+            return True
+        except ValueError:
+            return False
+
     def next(self):
         """Click on start button.
 
@@ -47,8 +54,9 @@ class StartScreen:
         """
         from screen.double_points import DoublePointsScreen
 
-        lvl = self.determine_lvl()
-        print(f"Starting with lvl {lvl}")
+        screenshot = take_screenshot()
+        lvl = self.determine_lvl(screenshot)
+        print(f"Level {lvl}, let's go!")
 
         click(*self.START_BUTTON)
         time.sleep(4)
