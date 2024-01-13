@@ -10,7 +10,6 @@ BUY_DOUBLE_POINTS = False
 
 class DoublePointsScreen(IntermediateScreen):
     DECLINE_BUTTON = 340, 746
-    # NEXT_BUTTON = 630, 746
 
     def __init__(self, lvl: int, chapter: int):
         self.lvl = lvl

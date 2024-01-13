@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "duolingo"
+name = "match-madness-bot"
 version = "0.1.0"
 description = ""
 authors = ["Vladimir Viazovetskov <erhosen@gmail.com>"]
