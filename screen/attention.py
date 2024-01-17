@@ -29,5 +29,5 @@ class AttentionScreen(BaseScreen):
         if self.chapter < 3:
             return GameScreen(lvl=self.lvl, chapter=self.chapter)
         else:
-            time.sleep(9)
+            time.sleep(17)
             return FinishScreen()

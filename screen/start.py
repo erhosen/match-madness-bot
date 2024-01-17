@@ -59,7 +59,7 @@ class StartScreen(BaseScreen):
         print(f"Level {lvl}, let's go!")
 
         click(*self.START_BUTTON)
-        time.sleep(4)
+        time.sleep(7)
         if DoublePointsScreen.is_current():
             return DoublePointsScreen(lvl=lvl, chapter=0)
 

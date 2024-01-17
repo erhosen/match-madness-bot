@@ -5,7 +5,7 @@ from screen.attention import AttentionScreen
 from screen.intermediate import IntermediateScreen
 
 
-BUY_DOUBLE_POINTS = False
+BUY_DOUBLE_POINTS = True
 
 
 class DoublePointsScreen(IntermediateScreen):
