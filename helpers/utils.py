@@ -7,6 +7,8 @@ import pyautogui
 from PIL import Image
 from pathlib import Path
 
+pyautogui.PAUSE = 0
+
 CUR_DIR = Path(__file__).parent
 PROJECT_DIR = CUR_DIR.parent
 IMAGES_DIR = PROJECT_DIR / "data" / "images"
@@ -61,7 +63,7 @@ def click(x: int, y: int) -> None:
 
     Screen agnostic.
     """
-    pyautogui.click(x, y + MENUBAR_HEIGHT, _pause=False)
+    pyautogui.click(x, y + MENUBAR_HEIGHT)
 
 
 def get_image_pixel(image: Image.Image, x: int, y: int) -> tuple[int, int, int]:
@@ -86,3 +88,18 @@ def save_image(image: Image.Image, name: str) -> None:
 
 def open_image(name: str) -> Image.Image:
     return Image.open(IMAGES_DIR / name)
+
+
+def pixel_matches_color(
+    pixel: tuple[int, int],
+    color: tuple[int, int, int],
+    threshold: int = 10,
+    image: Image.Image = None,
+) -> bool:
+    x, y = pixel
+    if image:
+        image_pixel = get_image_pixel(image, x, y)
+    else:
+        image_pixel = get_pixel(x, y)
+
+    return all(abs(image_pixel[i] - color[i]) < threshold for i in range(3))

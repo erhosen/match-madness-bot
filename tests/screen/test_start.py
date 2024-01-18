@@ -19,6 +19,13 @@ from screen.start import StartScreen
         # ("screen/_start_10.png", False),
         # ("screen/_start_11.png", False),
         ("screen/_start_12.png", True),
+        ("screen/_attention.png", False),
+        ("screen/_extreme.png", False),
+        ("screen/_finish.png", False),
+        (
+            "screen/_intermediate.png",
+            False,
+        ),  # Unfortunatelly, this is True. TODO: Fix it
     ],
 )
 def test_is_current_12(filename: str, expected: bool) -> None:

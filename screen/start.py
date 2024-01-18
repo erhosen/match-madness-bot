@@ -51,8 +51,8 @@ class StartScreen(BaseScreen):
         from screen.double_points import DoublePointsScreen
         from screen.attention import AttentionScreen
 
-        for _ in range(10):
-            time.sleep(2)
+        for _ in range(20):
+            time.sleep(1)
             screenshot = take_screenshot()
 
             if DoublePointsScreen.is_current(screenshot):

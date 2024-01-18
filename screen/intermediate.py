@@ -1,27 +1,22 @@
 import time
 
-from helpers.utils import click, get_pixel, take_screenshot
+from helpers.utils import click, take_screenshot, pixel_matches_color
 from screen._base import BaseScreen
 
 
 class IntermediateScreen(BaseScreen):
     NEXT_BUTTON = 630, 746
-    DUOLINGO_BLUE_1 = (70, 182, 243)
-    DUOLINGO_BLUE_2 = (108, 190, 243)
-    DUOLINGO_BLUE_3 = (107, 190, 243)
+    DUOLINGO_BLUE = (70, 182, 243)
+    DUOLINGO_LIGHT_BLUE = (108, 190, 243)
 
     @classmethod
     def is_current(cls, screenshot=None) -> bool:
-        intermediate_button_color = get_pixel(*cls.NEXT_BUTTON)
-        # print(f"intermediate_button_color: {intermediate_button_color}")
         # if screen has blue "next button", it's probably some intermediate screen, like "Rating Up"
-        if intermediate_button_color in (
-            cls.DUOLINGO_BLUE_1,
-            cls.DUOLINGO_BLUE_2,
-            cls.DUOLINGO_BLUE_3,
-        ):
-            return True
-        return False
+        return pixel_matches_color(
+            cls.NEXT_BUTTON, cls.DUOLINGO_BLUE, image=screenshot
+        ) or pixel_matches_color(
+            cls.NEXT_BUTTON, cls.DUOLINGO_LIGHT_BLUE, image=screenshot
+        )
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
@@ -29,8 +24,8 @@ class IntermediateScreen(BaseScreen):
         from screen.extreme import ExtremeScreen
         from screen.attention import AttentionScreen
 
-        for _ in range(5):
-            time.sleep(3)
+        for _ in range(20):
+            time.sleep(1)
             screenshot = take_screenshot()
 
             if cls.is_current(screenshot):

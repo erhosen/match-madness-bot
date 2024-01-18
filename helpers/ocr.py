@@ -3,8 +3,6 @@ import re
 import pytesseract
 from PIL.Image import Image
 
-from helpers.utils import timing
-
 JUST_WORDS_REGEX = re.compile(r"[^\w\s]")
 
 
@@ -12,7 +10,6 @@ def remove_punctuation(word: str) -> str:
     return JUST_WORDS_REGEX.sub("", word)
 
 
-@timing
 def process_image_tesseract(image: Image, lang: str) -> str:
     word = pytesseract.image_to_string(image, lang=lang, config="--psm 7")
     if word:
