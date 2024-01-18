@@ -33,7 +33,7 @@ class VirtualKeyboard:
     def __init__(self, lang: str, images: list[Image]):
         self.lang = lang
 
-        self.idx_to_reload: list[int | None] = [None, None]
+        self.idx_to_reload: list[int | None] = [None, None, None]
         self.words: dict[int, str | None] = {}
         self.images: dict[int, Image | None] = {}
 
@@ -46,11 +46,16 @@ class VirtualKeyboard:
 
     def reload(self, images: list[Image]):
         image_idx = self.idx_to_reload.pop(0)
-        if image_idx is not None:
-            image = images[image_idx]
-            word = process_image_tesseract(image, self.lang)
-            self.words[image_idx] = word
-            self.images[image_idx] = image
+        if image_idx is None:
+            # First few iterations, we don't need to reload anything
+            # But we need to sleep about the same time as it takes to reload
+            time.sleep(0.1)
+            return
+
+        image = images[image_idx]
+        word = process_image_tesseract(image, self.lang)
+        self.words[image_idx] = word
+        self.images[image_idx] = image
 
     def get_idx(self, word: str) -> int:
         for idx, word_ in self.words.items():

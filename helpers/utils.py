@@ -61,7 +61,7 @@ def click(x: int, y: int) -> None:
 
     Screen agnostic.
     """
-    pyautogui.click(x, y + MENUBAR_HEIGHT)
+    pyautogui.click(x, y + MENUBAR_HEIGHT, _pause=False)
 
 
 def get_image_pixel(image: Image.Image, x: int, y: int) -> tuple[int, int, int]:
