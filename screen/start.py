@@ -4,7 +4,6 @@ from PIL.Image import Image
 
 from helpers.ocr import get_number_from_image
 from screen._base import BaseScreen
-from screen.attention import AttentionScreen
 from helpers.utils import click, take_screenshot
 
 
@@ -47,20 +46,33 @@ class StartScreen(BaseScreen):
         except ValueError:
             return False
 
+    @classmethod
+    def determine_next_screen(cls) -> type[BaseScreen]:
+        from screen.double_points import DoublePointsScreen
+        from screen.attention import AttentionScreen
+
+        for _ in range(10):
+            time.sleep(2)
+            screenshot = take_screenshot()
+
+            if DoublePointsScreen.is_current(screenshot):
+                return DoublePointsScreen
+            elif AttentionScreen.is_current(screenshot):
+                return AttentionScreen
+
+        raise ValueError("Can't determine next screen")
+
     def next(self):
         """Click on start button.
 
         Wait for next screen.
         """
-        from screen.double_points import DoublePointsScreen
 
         screenshot = take_screenshot()
         lvl = self.determine_lvl(screenshot)
         print(f"Level {lvl}, let's go!")
 
         click(*self.START_BUTTON)
-        time.sleep(7)
-        if DoublePointsScreen.is_current():
-            return DoublePointsScreen(lvl=lvl, chapter=0)
 
-        return AttentionScreen(lvl=lvl, chapter=0)
+        NextScreen = self.determine_next_screen()
+        return NextScreen(lvl=lvl, chapter=0)

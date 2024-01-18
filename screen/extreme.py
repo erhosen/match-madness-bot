@@ -3,9 +3,10 @@ import time
 from PIL.Image import Image
 
 from helpers.utils import get_image_pixel, click
+from screen._base import BaseScreen
 
 
-class ExtremeScreen:
+class ExtremeScreen(BaseScreen):
     LOGO_PIXEL = 550, 370
     START_BUTTON = 666, 746
 

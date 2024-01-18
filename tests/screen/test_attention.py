@@ -8,8 +8,9 @@ from screen.attention import AttentionScreen
     "filename, expected",
     [
         ("screen/_attention.png", True),
+        ("screen/_finish.png", False),
         ("screen/_extreme.png", False),
-        ("screen/_start.png", False),
+        ("screen/_start_12.png", False),
     ],
 )
 def test_attention(filename: str, expected: bool) -> None:

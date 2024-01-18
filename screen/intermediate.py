@@ -23,23 +23,31 @@ class IntermediateScreen(BaseScreen):
             return True
         return False
 
-    def next(self):
-        from screen.extreme import ExtremeScreen
+    @classmethod
+    def determine_next_screen(cls) -> type[BaseScreen]:
         from screen.start import StartScreen
+        from screen.extreme import ExtremeScreen
+        from screen.attention import AttentionScreen
 
+        for _ in range(5):
+            time.sleep(3)
+            screenshot = take_screenshot()
+
+            if cls.is_current(screenshot):
+                return IntermediateScreen
+            elif ExtremeScreen.is_current(screenshot):
+                return AttentionScreen
+            elif StartScreen.is_current(screenshot):
+                return StartScreen
+
+        raise ValueError("Can't determine next screen")
+
+    def next(self):
         print("Intermediate screen found, clicking next button")
         click(*self.NEXT_BUTTON)
-        time.sleep(6)
 
-        if self.is_current():
-            # the next screen is also intermediate, what a surprise
-            return IntermediateScreen()
-
-        screenshot = take_screenshot()
-        if ExtremeScreen.is_current(screenshot):
-            return ExtremeScreen()
-
-        return StartScreen()
+        NextScreen = self.determine_next_screen()
+        return NextScreen()
 
 
 if __name__ == "__main__":
