@@ -50,10 +50,3 @@ class FinishScreen(BaseScreen):
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
-
-
-if __name__ == "__main__":
-    screen = FinishScreen()
-    screenshot = take_screenshot()
-    is_current = screen.is_current(screenshot)
-    print(is_current)

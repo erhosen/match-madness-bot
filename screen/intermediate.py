@@ -50,8 +50,3 @@ class IntermediateScreen(BaseScreen):
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
-
-
-if __name__ == "__main__":
-    is_current = IntermediateScreen().is_current()
-    print(is_current)

@@ -46,13 +46,3 @@ class TimeoutScreen(BaseScreen):
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
-
-
-if __name__ == "__main__":
-    # from helpers.utils import save_image
-
-    screen = TimeoutScreen()
-    _screenshot = take_screenshot()
-    # save_image(_screenshot, "screen/timeout.png")
-    is_current = screen.is_current(_screenshot)
-    print(is_current)

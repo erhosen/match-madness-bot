@@ -8,7 +8,6 @@ from helpers.match_madness import MatchMadness, NoTranslationFound
 from screen._base import BaseScreen
 from helpers.utils import (
     take_screenshot,
-    save_image,
     pixel_matches_color,
 )
 
@@ -63,11 +62,3 @@ class GameScreen(BaseScreen):
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
-
-
-if __name__ == "__main__":
-    screen = GameScreen(lvl=1, chapter=1)
-    _screenshot = take_screenshot()
-    save_image(_screenshot, "screen/game.png")
-    is_current = screen.is_current(_screenshot)
-    print(is_current)

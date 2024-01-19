@@ -2,7 +2,7 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import click, take_screenshot, pixel_matches_color, save_image
+from helpers.utils import click, take_screenshot, pixel_matches_color
 from screen._base import BaseScreen
 
 
@@ -61,12 +61,3 @@ class AttentionScreen(BaseScreen):
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
-
-
-if __name__ == "__main__":
-    screen = AttentionScreen(lvl=1, chapter=0)
-    screenshot = take_screenshot()
-    save_image(screenshot, "screen/_attention_3.png")
-    is_current = screen.is_current(screenshot)
-    print(is_current)
-    # print(screen.determine_next_screen())
