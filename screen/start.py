@@ -4,7 +4,7 @@ from PIL.Image import Image
 
 from helpers.ocr import get_number_from_image
 from screen._base import BaseScreen
-from helpers.utils import click, take_screenshot, pixel_matches_color
+from helpers.utils import click, take_screenshot, pixel_matches_color, save_image
 
 
 class StartScreen(BaseScreen):
@@ -73,9 +73,11 @@ class StartScreen(BaseScreen):
 
         Wait for next screen.
         """
-
+        time.sleep(1)
         screenshot = take_screenshot()
         lvl = self.determine_lvl(screenshot)
+        if lvl == 2:
+            save_image(screenshot, f"screen/start_{lvl}.png")
         print(f"Level {lvl}, let's go!")
 
         click(*self.START_BUTTON)

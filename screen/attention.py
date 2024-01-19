@@ -2,7 +2,7 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import click, take_screenshot, pixel_matches_color
+from helpers.utils import click, take_screenshot, pixel_matches_color, save_image
 from screen._base import BaseScreen
 
 
@@ -10,6 +10,7 @@ class AttentionScreen(BaseScreen):
     NEXT_BUTTON = 730, 746
     CENTRAL_PIXEL = 540, 380
 
+    DUOLINGO_RED = (254, 113, 109)
     DUOLINGO_GREEN = (134, 203, 62)
     DUOLINGO_ORANGE = (240, 120, 43)
     DUOLINGO_BACKGROUND = (21, 30, 34)
@@ -26,6 +27,7 @@ class AttentionScreen(BaseScreen):
             or pixel_matches_color(
                 cls.NEXT_BUTTON, cls.DUOLINGO_GREEN, image=screenshot
             )
+            or pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_RED, image=screenshot)
             and pixel_matches_color(
                 cls.CENTRAL_PIXEL, cls.DUOLINGO_BACKGROUND, image=screenshot
             )
@@ -62,10 +64,9 @@ class AttentionScreen(BaseScreen):
 
 
 if __name__ == "__main__":
-    # from helpers.utils import save_image
     screen = AttentionScreen(lvl=1, chapter=0)
     screenshot = take_screenshot()
-    # save_image(screenshot, "screen/attention_2.png")
+    save_image(screenshot, "screen/_attention_3.png")
     is_current = screen.is_current(screenshot)
     print(is_current)
     # print(screen.determine_next_screen())

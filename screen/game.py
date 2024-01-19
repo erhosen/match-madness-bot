@@ -212,7 +212,7 @@ class GameScreen(BaseScreen):
 
             if AttentionScreen.is_current(screenshot):
                 # return partial because we need to pass lvl and chapter
-                return partial(AttentionScreen, lvl=self.lvl, chapter=self.chapter)
+                return partial(AttentionScreen, lvl=self.lvl, chapter=self.chapter + 1)
             elif TimeoutScreen.is_current(screenshot):
                 return TimeoutScreen
             elif WaitWhereAreYouScreen.is_current(screenshot):

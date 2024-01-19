@@ -17,6 +17,7 @@ from screen.wait_where_are_you import WaitWhereAreYouScreen
     [
         ("screen/_attention.png", AttentionScreen),
         ("screen/_attention_2.png", AttentionScreen),
+        ("screen/_attention_3.png", AttentionScreen),
         ("screen/_extreme.png", ExtremeScreen),
         ("screen/_finish.png", FinishScreen),
         ("screen/_intermediate.png", IntermediateScreen),
@@ -35,3 +36,25 @@ def test_is_current_screen(
     assert expected_screen_cls.is_current(screenshot) is True
     for screen_cls in set(BaseScreen.__subclasses__()) - {expected_screen_cls}:
         assert screen_cls.is_current(screenshot) is False, screen_cls
+
+
+@pytest.mark.parametrize(
+    "filename, expected_lvl",
+    [
+        ("screen/_start_1.png", 1),
+        # ("screen/_start_2.png", 2),
+        ("screen/_start_3.png", 3),
+        ("screen/_start_4.png", 4),
+        ("screen/_start_5.png", 5),
+        ("screen/_start_6.png", 6),
+        ("screen/_start_7.png", 7),
+        ("screen/_start_8.png", 8),
+        ("screen/_start_9.png", 9),
+        ("screen/_start_10.png", 10),
+        ("screen/_start_11.png", 11),
+        ("screen/_start_12.png", 12),
+    ],
+)
+def test_start_screen_determine_lvl(filename: str, expected_lvl: int) -> None:
+    screenshot = open_image(filename)
+    assert StartScreen.determine_lvl(screenshot) == expected_lvl

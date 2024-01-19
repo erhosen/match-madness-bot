@@ -12,12 +12,18 @@ class FinishScreen(BaseScreen):
     LOGO_PIXEL = 530, 380
 
     DUOLINGO_LIGHT_ORANGE = (215, 108, 35)
+    DUOLINGO_LIGHT_RED = (219, 98, 95)
     DUOLINGO_WHITE = (255, 255, 255)
 
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        return pixel_matches_color(
-            cls.LOGO_PIXEL, cls.DUOLINGO_LIGHT_ORANGE, image=screenshot
+        return (
+            pixel_matches_color(
+                cls.LOGO_PIXEL, cls.DUOLINGO_LIGHT_ORANGE, image=screenshot
+            )
+            or pixel_matches_color(
+                cls.LOGO_PIXEL, cls.DUOLINGO_LIGHT_RED, image=screenshot
+            )
         ) and pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_WHITE, image=screenshot)
 
     @classmethod
