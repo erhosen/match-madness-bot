@@ -7,8 +7,9 @@ class BaseScreen(ABC):
     def __init__(self):
         print(f"Current screen: {self.__class__.__name__}")
 
+    @classmethod
     @abstractmethod
-    def is_current(self, screenshot: Image):
+    def is_current(cls, screenshot: Image):
         pass
 
     @abstractmethod

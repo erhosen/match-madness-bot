@@ -58,3 +58,4 @@ if __name__ == "__main__":
     screenshot = take_screenshot()
     is_current = screen.is_current(screenshot)
     print(is_current)
+    print(screen.determine_next_screen())

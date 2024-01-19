@@ -4,11 +4,13 @@ from PIL.Image import Image
 
 from helpers.ocr import get_number_from_image
 from screen._base import BaseScreen
-from helpers.utils import click, take_screenshot
+from helpers.utils import click, take_screenshot, pixel_matches_color
 
 
 class StartScreen(BaseScreen):
-    START_BUTTON = 530, 756
+    START_BUTTON = 450, 756
+
+    DUOLINGO_WHITE = (255, 255, 255)
 
     @staticmethod
     def determine_lvl(screenshot: Image) -> int:
@@ -41,8 +43,12 @@ class StartScreen(BaseScreen):
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
         try:
+            # we can determine lvl only if we are on start screen
             cls.determine_lvl(screenshot)
-            return True
+            # if we can determine lvl, one additional check that we have a white button
+            return pixel_matches_color(
+                cls.START_BUTTON, cls.DUOLINGO_WHITE, image=screenshot
+            )
         except ValueError:
             return False
 

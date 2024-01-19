@@ -102,4 +102,5 @@ def pixel_matches_color(
     else:
         image_pixel = get_pixel(x, y)
 
+    # print(f"image_pixel: {image_pixel}, color: {color}")
     return all(abs(image_pixel[i] - color[i]) < threshold for i in range(3))

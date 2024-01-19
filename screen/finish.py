@@ -7,7 +7,7 @@ from screen._base import BaseScreen
 
 
 class FinishScreen(BaseScreen):
-    NEXT_BUTTON = 530, 756
+    NEXT_BUTTON = 480, 756
 
     LOGO_PIXEL = 530, 380
 
@@ -26,7 +26,7 @@ class FinishScreen(BaseScreen):
         from screen.extreme import ExtremeScreen
         from screen.start import StartScreen
 
-        for _ in range(20):
+        for _ in range(30):
             time.sleep(1)
             screenshot = take_screenshot()
 
