@@ -7,7 +7,7 @@ import pyautogui
 from PIL import Image
 from pathlib import Path
 
-pyautogui.PAUSE = 0
+pyautogui.PAUSE = 0.11
 
 CUR_DIR = Path(__file__).parent
 PROJECT_DIR = CUR_DIR.parent
@@ -102,5 +102,5 @@ def pixel_matches_color(
     else:
         image_pixel = get_pixel(x, y)
 
-    # print(f"image_pixel: {image_pixel}, color: {color}")
+    print(f"image_pixel: {image_pixel}, color: {color}")
     return all(abs(image_pixel[i] - color[i]) < threshold for i in range(3))

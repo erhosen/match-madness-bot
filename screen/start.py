@@ -45,7 +45,7 @@ class StartScreen(BaseScreen):
         try:
             # we can determine lvl only if we are on start screen
             cls.determine_lvl(screenshot)
-            # if we can determine lvl, one additional check that we have a white button
+            # if we can determine lvl, one additional check that we have a white start button
             return pixel_matches_color(
                 cls.START_BUTTON, cls.DUOLINGO_WHITE, image=screenshot
             )

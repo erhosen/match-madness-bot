@@ -1,4 +1,5 @@
 import time
+from functools import partial
 
 from PIL.Image import Image
 
@@ -19,7 +20,12 @@ from helpers.utils import (
     take_screenshot,
     click,
     save_image,
+    pixel_matches_color,
 )
+
+
+class NoTranslationFound(Exception):
+    pass
 
 
 class VirtualKeyboard:
@@ -30,19 +36,19 @@ class VirtualKeyboard:
     Y0 = 266
     Y_SHIFT = 70
 
-    def __init__(self, lang: str, images: list[Image]):
+    def __init__(self, lang: str):
         self.lang = lang
 
         self.idx_to_reload: list[int | None] = [None, None, None]
         self.words: dict[int, str | None] = {}
         self.images: dict[int, Image | None] = {}
 
-        if images:
-            for image_idx in range(5):
-                image = images[image_idx]
-                word = process_image_tesseract(image, self.lang)
-                self.words[image_idx] = word
-                self.images[image_idx] = image
+    def load(self, images: list[Image]):
+        for image_idx in range(5):
+            image = images[image_idx]
+            word = process_image_tesseract(image, self.lang)
+            self.words[image_idx] = word
+            self.images[image_idx] = image
 
     def reload(self, images: list[Image]):
         image_idx = self.idx_to_reload.pop(0)
@@ -98,15 +104,12 @@ class VirtualKeyboard:
 
 
 class GameScreen(BaseScreen):
-    WORKING_AREA = (0, 0, 836, 611)
-
     def __init__(self, lvl: int, chapter: int):
         self.lvl = lvl
         self.chapter = chapter
 
-        rus_images, deu_images = self.get_images()
-        self.rus_keyboard = VirtualKeyboard(LANG_RUS, rus_images)
-        self.deu_keyboard = VirtualKeyboard(LANG_DEU, deu_images)
+        self.rus_keyboard = VirtualKeyboard(LANG_RUS)
+        self.deu_keyboard = VirtualKeyboard(LANG_DEU)
         super().__init__()
 
     def process_word(self, rus_word: str) -> int:
@@ -122,13 +125,15 @@ class GameScreen(BaseScreen):
             print(f"\nNo translation found for [{rus_word}]")
             self.deu_keyboard.print()
             self.rus_keyboard.print()
-            timeout = 110
+            timeout = 10
             prompt = f"Please enter translation index (timeout {timeout} sec): "
             try:
                 deu_index_raw = input_with_timeout(prompt, timeout)
             except TimeoutExpired as exc:
                 print("Timeout expired, exiting...")
-                raise ValueError(f"Can't find translation for [{rus_word}]") from exc
+                raise NoTranslationFound(
+                    f"Can't find translation for [{rus_word}]"
+                ) from exc
             else:
                 deu_index = int(deu_index_raw)
                 deu_word = self.deu_keyboard.get_word(deu_index)
@@ -137,6 +142,10 @@ class GameScreen(BaseScreen):
         return deu_index
 
     def process_chapter(self):
+        rus_images, deu_images = self.get_images()
+        self.rus_keyboard.load(rus_images)
+        self.deu_keyboard.load(deu_images)
+
         iterations = LEVELS_CONFIG[self.lvl][self.chapter]
         for i in range(iterations):
             for rus_idx in range(5):
@@ -144,9 +153,8 @@ class GameScreen(BaseScreen):
                 if not rus_word:
                     continue
 
-                deu_idx = self.process_word(rus_word)
-
                 self.rus_keyboard.click_on_idx(rus_idx)
+                deu_idx = self.process_word(rus_word)
                 self.deu_keyboard.click_on_idx(deu_idx)
 
                 is_last_iteration = (i == iterations - 1) and (rus_idx == 4)
@@ -182,22 +190,49 @@ class GameScreen(BaseScreen):
 
         return [rus_images, deu_images]
 
+    EXIT_BUTTON = (115, 28)
+    PRESS_PAIRS_TEXT = (221, 145)
+    DUOLINGO_WHITE = (255, 255, 255)
+    DUOLINGO_GRAY = (88, 102, 110)
+
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        raise NotImplementedError
+        return pixel_matches_color(
+            cls.PRESS_PAIRS_TEXT, cls.DUOLINGO_WHITE, image=screenshot
+        ) and pixel_matches_color(cls.EXIT_BUTTON, cls.DUOLINGO_GRAY, image=screenshot)
+
+    def determine_next_screen(self) -> type[BaseScreen] | partial[BaseScreen]:
+        from screen.attention import AttentionScreen
+        from screen.timeout import TimeoutScreen
+        from screen.wait_where_are_you import WaitWhereAreYouScreen
+
+        for _ in range(20):
+            time.sleep(1)
+            screenshot = take_screenshot()
+
+            if AttentionScreen.is_current(screenshot):
+                # return partial because we need to pass lvl and chapter
+                return partial(AttentionScreen, lvl=self.lvl, chapter=self.chapter)
+            elif TimeoutScreen.is_current(screenshot):
+                return TimeoutScreen
+            elif WaitWhereAreYouScreen.is_current(screenshot):
+                return WaitWhereAreYouScreen
+
+        raise ValueError("Can't determine next screen")
 
     def next(self):
-        from screen.attention import AttentionScreen
+        try:
+            self.process_chapter()
+        except NoTranslationFound:
+            print("No translation found, trying to continue...")
 
-        self.process_chapter()
-        time.sleep(1)
-        return AttentionScreen(lvl=self.lvl, chapter=self.chapter + 1)
+        NextScreen = self.determine_next_screen()
+        return NextScreen()
 
 
 if __name__ == "__main__":
-    game = GameScreen(lvl=1, chapter=0)
-    r_images, d_images = game.get_images()
-    for idx in range(len(r_images)):
-        rus_image, deu_image = r_images[idx], d_images[idx]
-        save_image(rus_image, f"words/rus_{idx}.png")
-        save_image(deu_image, f"words/deu_{idx}.png")
+    screen = GameScreen(lvl=1, chapter=1)
+    _screenshot = take_screenshot()
+    save_image(_screenshot, "screen/game.png")
+    is_current = screen.is_current(_screenshot)
+    print(is_current)

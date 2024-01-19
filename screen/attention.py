@@ -10,6 +10,7 @@ class AttentionScreen(BaseScreen):
     NEXT_BUTTON = 730, 746
     CENTRAL_PIXEL = 540, 380
 
+    DUOLINGO_GREEN = (134, 203, 62)
     DUOLINGO_ORANGE = (240, 120, 43)
     DUOLINGO_BACKGROUND = (21, 30, 34)
 
@@ -20,15 +21,20 @@ class AttentionScreen(BaseScreen):
 
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        return pixel_matches_color(
-            cls.NEXT_BUTTON, cls.DUOLINGO_ORANGE, image=screenshot
-        ) and pixel_matches_color(
-            cls.CENTRAL_PIXEL, cls.DUOLINGO_BACKGROUND, image=screenshot
+        return (
+            pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_ORANGE, image=screenshot)
+            or pixel_matches_color(
+                cls.NEXT_BUTTON, cls.DUOLINGO_GREEN, image=screenshot
+            )
+            and pixel_matches_color(
+                cls.CENTRAL_PIXEL, cls.DUOLINGO_BACKGROUND, image=screenshot
+            )
         )
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
         from screen.finish import FinishScreen
+        from screen.wait_where_are_you import WaitWhereAreYouScreen
 
         for _ in range(20):
             time.sleep(1)
@@ -36,6 +42,8 @@ class AttentionScreen(BaseScreen):
 
             if FinishScreen.is_current(screenshot):
                 return FinishScreen
+            elif WaitWhereAreYouScreen.is_current(screenshot):
+                return WaitWhereAreYouScreen
 
         raise ValueError("Can't determine next screen")
 
@@ -54,8 +62,10 @@ class AttentionScreen(BaseScreen):
 
 
 if __name__ == "__main__":
+    # from helpers.utils import save_image
     screen = AttentionScreen(lvl=1, chapter=0)
     screenshot = take_screenshot()
+    # save_image(screenshot, "screen/attention_2.png")
     is_current = screen.is_current(screenshot)
     print(is_current)
-    print(screen.determine_next_screen())
+    # print(screen.determine_next_screen())
