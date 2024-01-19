@@ -40,10 +40,3 @@ class Tesaurus:
 
         self.dict[rus_word].append(deu_word)
         self.save()
-
-
-tesaurus = Tesaurus("rus-deu.json")
-
-
-if __name__ == "__main__":
-    tesaurus.save()
