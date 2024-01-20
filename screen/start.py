@@ -2,7 +2,7 @@ import time
 
 from PIL.Image import Image
 
-from helpers.ocr import get_number_from_image
+from helpers.ocr import recognize_number
 from screen._base import BaseScreen
 from helpers.utils import click, take_screenshot, pixel_matches_color, save_image
 
@@ -27,7 +27,7 @@ class StartScreen(BaseScreen):
             lvl8_checkbox,
             lvl9_checkbox,
         ):
-            if lvl := get_number_from_image(checkbox):
+            if lvl := recognize_number(checkbox):
                 return lvl
 
         raise ValueError("Can't determine level")

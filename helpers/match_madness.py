@@ -3,7 +3,7 @@ import time
 from PIL.Image import Image
 
 from helpers.constants import Language, TILE_WIDTH, TILE_HEIGHT, DISTANCE_BETWEEN_TILES
-from helpers.ocr import process_image_tesseract
+from helpers.ocr import recognize_word
 from helpers.tesaurus import Translation, Tesaurus
 from helpers.utils import (
     take_screenshot,
@@ -22,7 +22,7 @@ class VirtualKeyboard:
     Y0 = 266
     Y_SHIFT = 70
 
-    def __init__(self, lang: str, x_shift: int):
+    def __init__(self, lang: Language, x_shift: int):
         self.lang = lang
         self.x_shift = x_shift
 
@@ -33,7 +33,7 @@ class VirtualKeyboard:
     def load(self, images: list[Image]):
         for image_idx in range(5):
             image = images[image_idx]
-            word = process_image_tesseract(image, self.lang)
+            word = recognize_word(image, self.lang)
             self.words[image_idx] = word
             self.images[image_idx] = image
 
@@ -46,7 +46,7 @@ class VirtualKeyboard:
             return
 
         image = images[image_idx]
-        word = process_image_tesseract(image, self.lang)
+        word = recognize_word(image, self.lang)
         self.words[image_idx] = word
         self.images[image_idx] = image
 
@@ -57,7 +57,7 @@ class VirtualKeyboard:
         raise ValueError(f"Word [{word}] not found in words: {self.words}")
 
     def get_translation_idx(self, translation: Translation) -> int | None:
-        # we iterate over translations, because the priority matters. Example: "a" -> ["sondern", "wie"]
+        # we iterate over translations, because the priority matters. Example: "там" -> ["da", "dort"]
         for translation_word in translation.words:
             try:
                 return self.get_idx(translation_word)
@@ -90,23 +90,16 @@ class MatchMadness:
     LEFT_X_SHIFT = 365
     RIGHT_X_SHIFT = 690
 
-    def __init__(self, lang_left: Language, lang_right: Language, iterations: int):
+    def __init__(self, lang_left: Language, lang_right: Language):
         self.lang_left = lang_left
         self.lang_right = lang_right
-        self.iterations = iterations
 
         self.left_keyboard = VirtualKeyboard(lang_left, self.LEFT_X_SHIFT)
         self.right_keyboard = VirtualKeyboard(lang_right, self.RIGHT_X_SHIFT)
         self.tesaurus = Tesaurus(f"{lang_left.value}-{lang_right.value}.json")
 
     @staticmethod
-    def get_images():
-        screenshot = take_screenshot()
-        # Grayscale
-        screenshot = screenshot.convert("L")
-        # Invert colors && increase contrast
-        screenshot = screenshot.point(lambda x: (255 - x) * 1.5)
-
+    def get_images(screenshot: Image):
         x0_left = 290
         x1_left = x0_left + TILE_WIDTH
         x0_right = 615
@@ -126,7 +119,8 @@ class MatchMadness:
         return [left_images, right_images]
 
     def load(self):
-        left_images, right_images = self.get_images()
+        screenshot = take_screenshot()
+        left_images, right_images = self.get_images(screenshot)
         self.left_keyboard.load(left_images)
         self.right_keyboard.load(right_images)
 
@@ -159,9 +153,10 @@ class MatchMadness:
 
         return right_index
 
-    def process_chapter(self):
+    def process_chapter(self, iterations: int):
         self.load()
-        for i in range(self.iterations):
+
+        for i in range(iterations):
             for left_idx in range(5):
                 left_word = self.left_keyboard.get_word(left_idx)
                 if not left_word:
@@ -171,10 +166,11 @@ class MatchMadness:
                 right_idx = self.process_word(left_word)
                 self.right_keyboard.click_on_idx(right_idx)
 
-                is_last_iteration = (i == self.iterations - 1) and (left_idx == 4)
+                is_last_iteration = (i == iterations - 1) and (left_idx == 4)
                 if is_last_iteration:
                     return
 
-                left_images, right_images = self.get_images()
+                screenshot = take_screenshot()
+                left_images, right_images = self.get_images(screenshot)
                 self.left_keyboard.reload(left_images)
                 self.right_keyboard.reload(right_images)

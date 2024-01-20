@@ -18,9 +18,7 @@ class GameScreen(BaseScreen):
         self.chapter = chapter
 
         self.match_madness = MatchMadness(
-            lang_left=Language.RUS,
-            lang_right=Language.DEU,
-            iterations=LEVELS_CONFIG[lvl][chapter],
+            lang_left=Language.RUS, lang_right=Language.DEU
         )
         super().__init__()
 
@@ -31,9 +29,13 @@ class GameScreen(BaseScreen):
 
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        return pixel_matches_color(
+        is_pairs_text_white = pixel_matches_color(
             cls.PRESS_PAIRS_TEXT, cls.DUOLINGO_WHITE, image=screenshot
-        ) and pixel_matches_color(cls.EXIT_BUTTON, cls.DUOLINGO_GRAY, image=screenshot)
+        )
+        is_exit_button_gray = pixel_matches_color(
+            cls.EXIT_BUTTON, cls.DUOLINGO_GRAY, image=screenshot
+        )
+        return is_pairs_text_white and is_exit_button_gray
 
     def determine_next_screen(self) -> type[BaseScreen] | partial[BaseScreen]:
         from screen.attention import AttentionScreen
@@ -56,7 +58,9 @@ class GameScreen(BaseScreen):
 
     def next(self):
         try:
-            self.match_madness.process_chapter()
+            self.match_madness.process_chapter(
+                iterations=LEVELS_CONFIG[self.lvl][self.chapter]
+            )
         except NoTranslationFound:
             print("No translation found, trying to continue...")
 
