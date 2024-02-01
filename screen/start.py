@@ -4,7 +4,7 @@ from PIL.Image import Image
 
 from helpers.ocr import recognize_number
 from screen._base import BaseScreen
-from helpers.utils import click, take_screenshot, pixel_matches_color, save_image
+from helpers.utils import click, take_screenshot, pixel_matches_color
 
 
 class StartScreen(BaseScreen):
@@ -45,6 +45,21 @@ class StartScreen(BaseScreen):
             return False
 
     @classmethod
+    def _determine_lvl(cls, attempts=5) -> int:
+        for _ in range(attempts):
+            screenshot = take_screenshot()
+            try:
+                lvl = cls.is_current(screenshot) and cls.determine_lvl(screenshot)
+                if not lvl:
+                    continue
+                return lvl
+            except ValueError:
+                time.sleep(1.5)
+                continue
+
+        raise ValueError("Can't determine level")
+
+    @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
         from screen.double_points import DoublePointsScreen
         from screen.attention import AttentionScreen
@@ -65,11 +80,8 @@ class StartScreen(BaseScreen):
 
         Wait for next screen.
         """
-        time.sleep(1)
-        screenshot = take_screenshot()
-        lvl = self.determine_lvl(screenshot)
-        if lvl == 2:
-            save_image(screenshot, f"screen/start_{lvl}.png")
+        lvl = self._determine_lvl()
+
         print(f"Level {lvl}, let's go!")
 
         click(*self.START_BUTTON)

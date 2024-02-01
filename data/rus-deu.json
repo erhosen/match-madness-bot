@@ -84,7 +84,8 @@
     "дамы и господа": [
         "meine damen und herren",
         "eine damen und herre",
-        "eine damen und herreı"
+        "eine damen und herreı",
+        "neine damen und herr"
     ],
     "два": [
         "zwei"
@@ -569,5 +570,32 @@
     ],
     "приятного аппетите": [
         "guten appetit"
+    ],
+    "ддобрый вечер": [
+        "guten abend"
+    ],
+    "извините": [
+        "entschuldigen sie"
+    ],
+    "удачи": [
+        "viel glück"
+    ],
+    "конечно": [
+        "natürlich"
+    ],
+    "сладких снов": [
+        "süße träume"
+    ],
+    "разумеется": [
+        "sicher"
+    ],
+    "спи хорошо": [
+        "schlaf gut"
+    ],
+    "простите": [
+        "verzeihen sie"
+    ],
+    "ничего страшного": [
+        "macht nichts"
     ]
 }

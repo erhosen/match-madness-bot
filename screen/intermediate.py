@@ -1,11 +1,11 @@
 import time
 
-from helpers.utils import click, take_screenshot, pixel_matches_color
+from helpers.utils import click, take_screenshot, pixel_matches_color, save_image
 from screen._base import BaseScreen
 
 
 class IntermediateScreen(BaseScreen):
-    NO_BUTTON = 345, 741
+    # NO_BUTTON = 345, 741
     NEXT_BUTTON = 630, 746
     DUOLINGO_BLUE = (70, 182, 243)
     DUOLINGO_LIGHT_BLUE = (108, 190, 243)
@@ -15,14 +15,10 @@ class IntermediateScreen(BaseScreen):
     def is_current(cls, screenshot=None) -> bool:
         # if screen has blue "next button", but doesn't have "no button",
         # it's probably some intermediate screen, like "Rating Up"
-        return (
-            pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_BLUE, image=screenshot)
-            or pixel_matches_color(
-                cls.NEXT_BUTTON, cls.DUOLINGO_LIGHT_BLUE, image=screenshot
-            )
-            and pixel_matches_color(
-                cls.NO_BUTTON, cls.DUOLINGO_BACKGROUND, image=screenshot
-            )
+        return pixel_matches_color(
+            cls.NEXT_BUTTON, cls.DUOLINGO_BLUE, image=screenshot
+        ) or pixel_matches_color(
+            cls.NEXT_BUTTON, cls.DUOLINGO_LIGHT_BLUE, image=screenshot
         )
 
     @classmethod
@@ -50,3 +46,11 @@ class IntermediateScreen(BaseScreen):
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
+
+
+if __name__ == "__main__":
+    _screen = IntermediateScreen()
+    _screenshot = take_screenshot()
+    save_image(_screenshot, "screen/intermediate_6.png")
+    _is_current = _screen.is_current(_screenshot)
+    print(_is_current)

@@ -11,7 +11,7 @@ class AttentionScreen(BaseScreen):
     CENTRAL_PIXEL = 540, 380
 
     DUOLINGO_RED = (254, 113, 109)
-    DUOLINGO_GREEN = (134, 203, 62)
+    DUOLINGO_GREEN = (161, 209, 81)
     DUOLINGO_ORANGE = (240, 120, 43)
     DUOLINGO_BACKGROUND = (21, 30, 34)
 
@@ -25,12 +25,13 @@ class AttentionScreen(BaseScreen):
         return (
             pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_ORANGE, image=screenshot)
             or pixel_matches_color(
-                cls.NEXT_BUTTON, cls.DUOLINGO_GREEN, image=screenshot
+                cls.NEXT_BUTTON, cls.DUOLINGO_GREEN, image=screenshot, threshold=20
             )
-            or pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_RED, image=screenshot)
-            and pixel_matches_color(
-                cls.CENTRAL_PIXEL, cls.DUOLINGO_BACKGROUND, image=screenshot
+            or pixel_matches_color(
+                cls.NEXT_BUTTON, cls.DUOLINGO_RED, image=screenshot, threshold=20
             )
+        ) and pixel_matches_color(
+            cls.CENTRAL_PIXEL, cls.DUOLINGO_BACKGROUND, image=screenshot
         )
 
     @classmethod
@@ -61,3 +62,10 @@ class AttentionScreen(BaseScreen):
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
+
+
+if __name__ == "__main__":
+    _screen = AttentionScreen(lvl=12, chapter=1)
+    _screenshot = take_screenshot()
+    _is_current = _screen.is_current(_screenshot)
+    print(_is_current)

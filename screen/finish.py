@@ -19,10 +19,13 @@ class FinishScreen(BaseScreen):
     def is_current(cls, screenshot: Image) -> bool:
         return (
             pixel_matches_color(
-                cls.LOGO_PIXEL, cls.DUOLINGO_LIGHT_ORANGE, image=screenshot
+                cls.LOGO_PIXEL,
+                cls.DUOLINGO_LIGHT_ORANGE,
+                image=screenshot,
+                threshold=20,
             )
             or pixel_matches_color(
-                cls.LOGO_PIXEL, cls.DUOLINGO_LIGHT_RED, image=screenshot
+                cls.LOGO_PIXEL, cls.DUOLINGO_LIGHT_RED, image=screenshot, threshold=20
             )
         ) and pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_WHITE, image=screenshot)
 
@@ -50,3 +53,10 @@ class FinishScreen(BaseScreen):
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
+
+
+if __name__ == "__main__":
+    _screen = FinishScreen()
+    _screenshot = take_screenshot()
+    _is_current = _screen.is_current(_screenshot)
+    print(_is_current)

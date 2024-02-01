@@ -1,6 +1,8 @@
 import time
 
-from helpers.utils import click, take_screenshot, save_image
+from PIL.Image import Image
+
+from helpers.utils import click, pixel_matches_color
 from screen._base import BaseScreen
 from screen.attention import AttentionScreen
 
@@ -12,19 +14,19 @@ class DoublePointsScreen(BaseScreen):
     NEXT_BUTTON = 630, 746
     DECLINE_BUTTON = 340, 746
 
+    DUOLINGO_BLUE = (107, 190, 243)
+
     def __init__(self, lvl: int, chapter: int):
         self.lvl = lvl
         self.chapter = chapter
         super().__init__()
 
     @classmethod
-    def is_current(cls, screenshot=None) -> bool:
-        return False
+    def is_current(cls, screenshot: Image) -> bool:
+        return pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_BLUE, image=screenshot)
 
     def next(self):
         print("DoublePoints screen found")
-        screenshot = take_screenshot()
-        save_image(screenshot, "screen/double_points.png")
 
         if BUY_DOUBLE_POINTS:
             print("Buying double points 💰")

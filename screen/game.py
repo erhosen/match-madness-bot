@@ -9,6 +9,7 @@ from screen._base import BaseScreen
 from helpers.utils import (
     take_screenshot,
     pixel_matches_color,
+    click,
 )
 
 
@@ -62,6 +63,7 @@ class GameScreen(BaseScreen):
                 iterations=LEVELS_CONFIG[self.lvl][self.chapter]
             )
         except NoTranslationFound:
+            click(*self.EXIT_BUTTON)
             print("No translation found, trying to continue...")
 
         NextScreen = self.determine_next_screen()

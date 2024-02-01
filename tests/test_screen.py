@@ -4,6 +4,7 @@ from helpers.utils import open_image
 from screen import StartScreen
 from screen._base import BaseScreen
 from screen.attention import AttentionScreen
+from screen.double_points import DoublePointsScreen
 from screen.extreme import ExtremeScreen
 from screen.finish import FinishScreen
 from screen.game import GameScreen
@@ -58,3 +59,8 @@ def test_is_current_screen(
 def test_start_screen_determine_lvl(filename: str, expected_lvl: int) -> None:
     screenshot = open_image(filename)
     assert StartScreen.determine_lvl(screenshot) == expected_lvl
+
+
+def test_double_points_screen():
+    screenshot = open_image("screen/_double_points.png")
+    assert DoublePointsScreen.is_current(screenshot)

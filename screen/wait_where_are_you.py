@@ -18,11 +18,14 @@ class WaitWhereAreYouScreen(BaseScreen):
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
         from screen.start import StartScreen
+        from screen.finish import FinishScreen
 
         for _ in range(20):
             time.sleep(1)
             screenshot = take_screenshot()
 
+            if FinishScreen.is_current(screenshot):
+                return FinishScreen
             if StartScreen.is_current(screenshot):
                 return StartScreen
 
