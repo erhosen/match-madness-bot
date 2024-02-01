@@ -26,6 +26,7 @@ from screen.wait_where_are_you import WaitWhereAreYouScreen
         ("screen/_timeout.png", TimeoutScreen),
         ("screen/_game.png", GameScreen),
         ("screen/_wait_where_are_you.png", WaitWhereAreYouScreen),
+        ("screen/_double_points.png", DoublePointsScreen),
     ],
 )
 def test_is_current_screen(
@@ -43,7 +44,7 @@ def test_is_current_screen(
     "filename, expected_lvl",
     [
         ("screen/_start_1.png", 1),
-        # ("screen/_start_2.png", 2),
+        ("screen/_start_2.png", 2),
         ("screen/_start_3.png", 3),
         ("screen/_start_4.png", 4),
         ("screen/_start_5.png", 5),
@@ -59,8 +60,3 @@ def test_is_current_screen(
 def test_start_screen_determine_lvl(filename: str, expected_lvl: int) -> None:
     screenshot = open_image(filename)
     assert StartScreen.determine_lvl(screenshot) == expected_lvl
-
-
-def test_double_points_screen():
-    screenshot = open_image("screen/_double_points.png")
-    assert DoublePointsScreen.is_current(screenshot)
