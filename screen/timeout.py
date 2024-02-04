@@ -2,12 +2,14 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import take_screenshot, pixel_matches_color, click
+from helpers.utils import take_screenshot, open_image, locate_sprite, click_on
 from screen._base import BaseScreen
 
 
+NO_THANKS_BUTTON_SPRITE = open_image("sprites/no_thanks_button.png")
+
+
 class TimeoutScreen(BaseScreen):
-    USE_HINT_BUTTON = 400, 710
     IGNORE_BUTTON = 400, 755
     EXIT_BUTTON = 340, 745
 
@@ -16,15 +18,13 @@ class TimeoutScreen(BaseScreen):
 
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        return pixel_matches_color(
-            cls.USE_HINT_BUTTON, cls.DUOLINGO_LIGHT_BLUE, image=screenshot
-        ) and pixel_matches_color(
-            cls.IGNORE_BUTTON, cls.DUOLINGO_BACKGROUND, image=screenshot
-        )
+        point = locate_sprite(NO_THANKS_BUTTON_SPRITE, screenshot)
+        return bool(point)
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
         from screen.start import StartScreen
+        from screen.wait_where_are_you import WaitWhereAreYouScreen
 
         for _ in range(20):
             time.sleep(1)
@@ -32,17 +32,14 @@ class TimeoutScreen(BaseScreen):
 
             if StartScreen.is_current(screenshot):
                 return StartScreen
+            elif WaitWhereAreYouScreen.is_current(screenshot):
+                return WaitWhereAreYouScreen
 
         raise ValueError("Can't determine next screen")
 
     def next(self) -> "BaseScreen":
-        print("Timeout screen found, clicking ignore button")
-        click(*self.IGNORE_BUTTON)
-
-        time.sleep(2)
-
-        print("Wait, where are you going?")
-        click(*self.EXIT_BUTTON)
+        print('Timeout screen found, clicking "no thanks" button')
+        click_on(NO_THANKS_BUTTON_SPRITE)
 
         NextScreen = self.determine_next_screen()
         return NextScreen()

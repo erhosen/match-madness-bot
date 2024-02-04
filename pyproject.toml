@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.10"
 PyAutoGUI = "^0.9.54"
 pytesseract = "^0.3.10"
+opencv-python = "^4.9.0.80"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.4"

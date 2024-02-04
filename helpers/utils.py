@@ -7,6 +7,8 @@ import pyautogui
 from PIL import Image
 from pathlib import Path
 
+from pyscreeze import Box, Point
+
 pyautogui.PAUSE = 0
 
 CUR_DIR = Path(__file__).parent
@@ -66,6 +68,15 @@ def click(x: int, y: int) -> None:
     pyautogui.click(x, y + MENUBAR_HEIGHT)
 
 
+def click_on(sprite: Image.Image) -> None:
+    """Click on sprite.
+
+    Screen agnostic.
+    """
+    point = locate_sprite(sprite, take_screenshot())
+    click(point.x, point.y)
+
+
 def get_image_pixel(image: Image.Image, x: int, y: int) -> tuple[int, int, int]:
     _pixel = image.getpixel((x, y))
     return _pixel[0], _pixel[1], _pixel[2]
@@ -104,3 +115,24 @@ def pixel_matches_color(
 
     # print(f"image_pixel: {image_pixel}, color: {color}")
     return all(abs(image_pixel[i] - color[i]) < threshold for i in range(3))
+
+
+def center(box: Box) -> Point:
+    center_x = int(box.left + box.width / 2)
+    center_y = int(box.top + box.height / 2)
+    return Point(x=center_x, y=center_y)
+
+
+def locate_sprite(
+    sprite: Image.Image, screenshot: Image.Image, confidence: float = 0.9
+) -> Point | None:
+    """Find sprite on screenshot and return its central point.
+
+    Returns None if sprite is not found.
+    """
+    try:
+        box = pyautogui.locate(sprite, screenshot, confidence=confidence)
+        central_point = center(box)
+        return central_point
+    except pyautogui.ImageNotFoundException:
+        return None
