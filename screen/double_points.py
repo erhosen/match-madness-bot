@@ -2,12 +2,14 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import click, pixel_matches_color
+from helpers.utils import open_image, locate_sprite, click_on
 from screen._base import BaseScreen
-from screen.attention import AttentionScreen
 
 
 BUY_DOUBLE_POINTS = True
+
+NO_THANKS_BUTTON_SPRITE = open_image("sprites/no_thanks_button.png")
+BUY_DOUBLE_POINTS_BUTTON_SPRITE = open_image("sprites/buy_double_points_button.png")
 
 
 class DoublePointsScreen(BaseScreen):
@@ -23,18 +25,31 @@ class DoublePointsScreen(BaseScreen):
 
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        return pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_BLUE, image=screenshot)
+        point = locate_sprite(BUY_DOUBLE_POINTS_BUTTON_SPRITE, screenshot)
+        return bool(point)
 
     def next(self):
+        from screen.attention import AttentionScreen
+
         print("DoublePoints screen found")
 
         if BUY_DOUBLE_POINTS:
             print("Buying double points 💰")
-            click(*self.NEXT_BUTTON)
+            click_on(BUY_DOUBLE_POINTS_BUTTON_SPRITE)
         else:
             print("Declining double points 🙅‍")
-            click(*self.DECLINE_BUTTON)
+            click_on(NO_THANKS_BUTTON_SPRITE)
 
         time.sleep(4)
 
         return AttentionScreen(lvl=self.lvl, chapter=self.chapter)
+
+
+if __name__ == "__main__":
+    _screen = DoublePointsScreen(1, 1)
+    _screenshot = open_image("screen/_double_points.png")
+    _is_current = _screen.is_current(_screenshot)
+    print(_is_current)
+
+    # buy_double_points_button = _screenshot.crop((580, 730, 840, 760))
+    # save_image(buy_double_points_button, "sprites/buy_double_points_button.png")

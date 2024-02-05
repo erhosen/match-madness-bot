@@ -1,8 +1,21 @@
-from screen import StartScreen
+from helpers.utils import take_screenshot
+from screen._base import BaseScreen
+from screen.start import StartScreen
+from screen.wait_where_are_you import WaitWhereAreYouScreen
+
+
+def determine_current_screen() -> type[BaseScreen]:
+    screenshot = take_screenshot()
+    for screen_cls in [StartScreen, WaitWhereAreYouScreen]:
+        if screen_cls.is_current(screenshot):
+            return screen_cls
+
+    raise ValueError("Can't determine current screen")
 
 
 def main():
-    screen = StartScreen()
+    screen_cls = determine_current_screen()
+    screen = screen_cls()
     while True:
         screen = screen.next()
 

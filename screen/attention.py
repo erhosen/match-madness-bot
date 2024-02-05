@@ -2,8 +2,17 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import click, take_screenshot, pixel_matches_color
+from helpers.utils import (
+    click,
+    take_screenshot,
+    pixel_matches_color,
+    open_image,
+    locate_sprite,
+)
 from screen._base import BaseScreen
+
+
+NEXT_BUTTON_GREEN_SPRITE = open_image("sprites/next_button_green.png")
 
 
 class AttentionScreen(BaseScreen):
@@ -22,16 +31,13 @@ class AttentionScreen(BaseScreen):
 
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
+        point = locate_sprite(NEXT_BUTTON_GREEN_SPRITE, screenshot)
         return (
             pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_ORANGE, image=screenshot)
-            or pixel_matches_color(
-                cls.NEXT_BUTTON, cls.DUOLINGO_GREEN, image=screenshot, threshold=20
-            )
+            or bool(point)
             or pixel_matches_color(
                 cls.NEXT_BUTTON, cls.DUOLINGO_RED, image=screenshot, threshold=20
             )
-        ) and pixel_matches_color(
-            cls.CENTRAL_PIXEL, cls.DUOLINGO_BACKGROUND, image=screenshot
         )
 
     @classmethod
@@ -69,3 +75,6 @@ if __name__ == "__main__":
     _screenshot = take_screenshot()
     _is_current = _screen.is_current(_screenshot)
     print(_is_current)
+
+    # next_button_green_sprite = _screenshot.crop((660, 725, 920, 765))
+    # save_image(next_button_green_sprite, "sprites/next_button_green.png")

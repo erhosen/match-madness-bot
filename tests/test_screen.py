@@ -3,6 +3,7 @@ import pytest
 from helpers.utils import open_image
 from screen import StartScreen
 from screen._base import BaseScreen
+from screen.double_points import DoublePointsScreen
 from screen.rate_us import RateUsScreen
 from screen.timeout import TimeoutScreen
 
@@ -20,7 +21,7 @@ from screen.timeout import TimeoutScreen
         ("screen/_timeout.png", TimeoutScreen),
         # ("screen/_game.png", GameScreen),
         # ("screen/_wait_where_are_you.png", WaitWhereAreYouScreen),
-        # ("screen/_double_points.png", DoublePointsScreen),
+        ("screen/_double_points.png", DoublePointsScreen),
         ("screen/_rate_us.png", RateUsScreen),
     ],
 )

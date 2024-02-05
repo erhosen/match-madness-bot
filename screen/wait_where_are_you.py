@@ -2,18 +2,18 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import take_screenshot, pixel_matches_color, click
+from helpers.utils import take_screenshot, open_image, locate_sprite, click_on
 from screen._base import BaseScreen
 
 
+EXIT_BUTTON_SPRITE = open_image("sprites/exit_button.png")
+
+
 class WaitWhereAreYouScreen(BaseScreen):
-    EXIT_BUTTON = 345, 741
-
-    DUOLINGO_RED = (225, 98, 93)
-
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        return pixel_matches_color(cls.EXIT_BUTTON, cls.DUOLINGO_RED, image=screenshot)
+        point = locate_sprite(EXIT_BUTTON_SPRITE, screenshot)
+        return bool(point)
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
@@ -32,7 +32,16 @@ class WaitWhereAreYouScreen(BaseScreen):
         raise ValueError("Can't determine next screen")
 
     def next(self) -> "BaseScreen":
-        click(*self.EXIT_BUTTON)
+        click_on(EXIT_BUTTON_SPRITE)
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
+
+
+if __name__ == "__main__":
+    _screen = WaitWhereAreYouScreen()
+    _screenshot = take_screenshot()
+    print(_screen.is_current(_screenshot))
+
+    # exit_button_sprite = _screenshot.crop((300, 730, 385, 760))
+    # save_image(exit_button_sprite, "sprites/exit_button.png")
