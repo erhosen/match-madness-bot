@@ -2,7 +2,7 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import take_screenshot, open_image, locate_sprite, click_on
+from helpers.utils import take_screenshot, open_image, click_on, has_sprite
 from screen._base import BaseScreen
 
 
@@ -12,8 +12,7 @@ EXIT_BUTTON_SPRITE = open_image("sprites/exit_button.png")
 class WaitWhereAreYouScreen(BaseScreen):
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        point = locate_sprite(EXIT_BUTTON_SPRITE, screenshot)
-        return bool(point)
+        return has_sprite(EXIT_BUTTON_SPRITE, screenshot)
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:

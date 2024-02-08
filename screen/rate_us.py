@@ -2,7 +2,7 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import take_screenshot, locate_sprite, open_image, click_on
+from helpers.utils import take_screenshot, open_image, click_on, has_sprite
 from screen._base import BaseScreen
 
 
@@ -12,8 +12,7 @@ NOT_NOW_BUTTON_SPRITE = open_image("sprites/not_now_button.png")
 class RateUsScreen(BaseScreen):
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        point = locate_sprite(NOT_NOW_BUTTON_SPRITE, screenshot)
-        return bool(point)
+        return has_sprite(NOT_NOW_BUTTON_SPRITE, screenshot)
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:

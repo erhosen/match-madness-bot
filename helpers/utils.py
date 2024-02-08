@@ -73,7 +73,7 @@ def click_on(sprite: Image.Image) -> None:
 
     Screen agnostic.
     """
-    point = locate_sprite(sprite, take_screenshot())
+    point = _locate_sprite(sprite, take_screenshot())
     click(point.x, point.y)
 
 
@@ -123,7 +123,7 @@ def center(box: Box) -> Point:
     return Point(x=center_x, y=center_y)
 
 
-def locate_sprite(
+def _locate_sprite(
     sprite: Image.Image, screenshot: Image.Image, confidence: float = 0.9
 ) -> Point | None:
     """Find sprite on screenshot and return its central point.
@@ -136,3 +136,14 @@ def locate_sprite(
         return central_point
     except pyautogui.ImageNotFoundException:
         return None
+
+
+def has_sprite(
+    sprite: Image.Image, screenshot: Image.Image, confidence: float = 0.9
+) -> bool:
+    """Check if sprite is present on screenshot.
+
+    Returns True if sprite is found, False otherwise.
+    """
+    central_point = _locate_sprite(sprite, screenshot, confidence=confidence)
+    return bool(central_point)

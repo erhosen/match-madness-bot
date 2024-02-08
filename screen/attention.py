@@ -7,7 +7,7 @@ from helpers.utils import (
     take_screenshot,
     pixel_matches_color,
     open_image,
-    locate_sprite,
+    has_sprite,
 )
 from screen._base import BaseScreen
 
@@ -31,10 +31,9 @@ class AttentionScreen(BaseScreen):
 
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        point = locate_sprite(NEXT_BUTTON_GREEN_SPRITE, screenshot)
         return (
             pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_ORANGE, image=screenshot)
-            or bool(point)
+            or has_sprite(NEXT_BUTTON_GREEN_SPRITE, screenshot)
             or pixel_matches_color(
                 cls.NEXT_BUTTON, cls.DUOLINGO_RED, image=screenshot, threshold=20
             )

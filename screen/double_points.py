@@ -2,7 +2,7 @@ import time
 
 from PIL.Image import Image
 
-from helpers.utils import open_image, locate_sprite, click_on
+from helpers.utils import open_image, click_on, has_sprite
 from screen._base import BaseScreen
 
 
@@ -25,8 +25,9 @@ class DoublePointsScreen(BaseScreen):
 
     @classmethod
     def is_current(cls, screenshot: Image) -> bool:
-        point = locate_sprite(BUY_DOUBLE_POINTS_BUTTON_SPRITE, screenshot)
-        return bool(point)
+        return has_sprite(BUY_DOUBLE_POINTS_BUTTON_SPRITE, screenshot) and has_sprite(
+            NO_THANKS_BUTTON_SPRITE, screenshot
+        )
 
     def next(self):
         from screen.attention import AttentionScreen

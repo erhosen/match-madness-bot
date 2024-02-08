@@ -34,6 +34,7 @@ class FinishScreen(BaseScreen):
         from screen.intermediate import IntermediateScreen
         from screen.extreme import ExtremeScreen
         from screen.start import StartScreen
+        from screen.rate_us import RateUsScreen
 
         for _ in range(30):
             time.sleep(1)
@@ -41,6 +42,8 @@ class FinishScreen(BaseScreen):
 
             if IntermediateScreen.is_current(screenshot):
                 return IntermediateScreen
+            elif RateUsScreen.is_current(screenshot):
+                return RateUsScreen
             elif ExtremeScreen.is_current(screenshot):
                 return ExtremeScreen
             elif StartScreen.is_current(screenshot):
