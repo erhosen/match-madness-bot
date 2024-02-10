@@ -1,10 +1,11 @@
 import time
 
-from PIL.Image import Image
-
 from helpers.ocr import recognize_number
+from helpers.screenshot import Screenshot
 from screen._base import BaseScreen
-from helpers.utils import click, take_screenshot, pixel_matches_color
+from helpers.utils import open_image
+
+BIG_START_BUTTON_SPRITE = open_image("sprites/big_start_button.png")
 
 
 class StartScreen(BaseScreen):
@@ -13,12 +14,12 @@ class StartScreen(BaseScreen):
     DUOLINGO_WHITE = (255, 255, 255)
 
     @staticmethod
-    def determine_lvl(screenshot: Image) -> int:
-        lvl1_checkbox = screenshot.crop((230, 475, 260, 500))
-        lvl2_checkbox = screenshot.crop((370, 475, 400, 500))
-        lvln_checkbox = screenshot.crop((510, 475, 540, 500))
-        lvl8_checkbox = screenshot.crop((650, 475, 680, 500))
-        lvl9_checkbox = screenshot.crop((790, 475, 820, 500))
+    def determine_lvl(screenshot: Screenshot) -> int:
+        lvl1_checkbox = screenshot.image.crop((230, 475, 260, 500))
+        lvl2_checkbox = screenshot.image.crop((370, 475, 400, 500))
+        lvln_checkbox = screenshot.image.crop((510, 475, 540, 500))
+        lvl8_checkbox = screenshot.image.crop((650, 475, 680, 500))
+        lvl9_checkbox = screenshot.image.crop((790, 475, 820, 500))
 
         for checkbox in (
             lvl1_checkbox,
@@ -33,21 +34,19 @@ class StartScreen(BaseScreen):
         raise ValueError("Can't determine level")
 
     @classmethod
-    def is_current(cls, screenshot: Image) -> bool:
+    def is_current(cls, screenshot: Screenshot) -> bool:
         try:
             # we can determine lvl only if we are on start screen
             cls.determine_lvl(screenshot)
-            # if we can determine lvl, one additional check that we have a white start button
-            return pixel_matches_color(
-                cls.START_BUTTON, cls.DUOLINGO_WHITE, image=screenshot
-            )
+            # if we can determine lvl, one additional check that we have a big start button
+            return BIG_START_BUTTON_SPRITE in screenshot
         except ValueError:
             return False
 
     @classmethod
     def _determine_lvl(cls, attempts=5) -> int:
         for _ in range(attempts):
-            screenshot = take_screenshot()
+            screenshot = Screenshot.take()
             try:
                 lvl = cls.is_current(screenshot) and cls.determine_lvl(screenshot)
                 if not lvl:
@@ -66,7 +65,7 @@ class StartScreen(BaseScreen):
 
         for _ in range(20):
             time.sleep(1)
-            screenshot = take_screenshot()
+            screenshot = Screenshot.take()
 
             if DoublePointsScreen.is_current(screenshot):
                 return DoublePointsScreen
@@ -84,7 +83,7 @@ class StartScreen(BaseScreen):
 
         print(f"Level {lvl}, let's go!")
 
-        click(*self.START_BUTTON)
+        Screenshot.take().click_on(BIG_START_BUTTON_SPRITE)
 
-        NextScreen = self.determine_next_screen()
-        return NextScreen(lvl=lvl, chapter=0)
+        NextScreen = self.determine_next_screen()  # noqa
+        return NextScreen(lvl=lvl, chapter=0)  # type: ignore

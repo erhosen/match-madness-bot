@@ -1,14 +1,13 @@
 import time
 
 from PIL.Image import Image
+from pyscreeze import Point
 
 from helpers.constants import Language, TILE_WIDTH, TILE_HEIGHT, DISTANCE_BETWEEN_TILES
 from helpers.ocr import recognize_word
+from helpers.screenshot import Screenshot
 from helpers.tesaurus import Translation, Tesaurus
 from helpers.utils import (
-    take_screenshot,
-    click,
-    save_image,
     TimeoutExpired,
     input_with_timeout,
 )
@@ -72,7 +71,8 @@ class VirtualKeyboard:
         return word
 
     def click_on_idx(self, idx: int) -> None:
-        click(self.x_shift, self.Y0 + idx * self.Y_SHIFT)
+        point = Point(self.x_shift, self.Y0 + idx * self.Y_SHIFT)
+        Screenshot.click(point)
 
         self.words[idx] = None
         self.images[idx] = None
@@ -81,9 +81,6 @@ class VirtualKeyboard:
     def print(self):
         for idx, word in self.words.items():
             print(idx, word if word else "")
-        for idx, image in self.images.items():
-            if image:
-                save_image(image, f"words/{self.lang}_{idx}.png")
 
 
 class MatchMadness:
@@ -119,8 +116,8 @@ class MatchMadness:
         return [left_images, right_images]
 
     def load(self):
-        screenshot = take_screenshot()
-        left_images, right_images = self.get_images(screenshot)
+        screenshot = Screenshot.take()
+        left_images, right_images = self.get_images(screenshot.image)
         self.left_keyboard.load(left_images)
         self.right_keyboard.load(right_images)
 
@@ -170,7 +167,7 @@ class MatchMadness:
                 if is_last_iteration:
                     return
 
-                screenshot = take_screenshot()
-                left_images, right_images = self.get_images(screenshot)
+                screenshot = Screenshot.take()
+                left_images, right_images = self.get_images(screenshot.image)
                 self.left_keyboard.reload(left_images)
                 self.right_keyboard.reload(right_images)

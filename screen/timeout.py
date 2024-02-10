@@ -1,8 +1,7 @@
 import time
 
-from PIL.Image import Image
-
-from helpers.utils import take_screenshot, open_image, click_on, has_sprite
+from helpers.screenshot import Screenshot
+from helpers.utils import open_image
 from screen._base import BaseScreen
 
 
@@ -17,8 +16,8 @@ class TimeoutScreen(BaseScreen):
     DUOLINGO_BACKGROUND = (21, 30, 34)
 
     @classmethod
-    def is_current(cls, screenshot: Image) -> bool:
-        return has_sprite(NO_THANKS_BUTTON_SPRITE, screenshot)
+    def is_current(cls, screenshot: Screenshot) -> bool:
+        return NO_THANKS_BUTTON_SPRITE in screenshot
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
@@ -27,7 +26,7 @@ class TimeoutScreen(BaseScreen):
 
         for _ in range(20):
             time.sleep(1)
-            screenshot = take_screenshot()
+            screenshot = Screenshot.take()
 
             if StartScreen.is_current(screenshot):
                 return StartScreen
@@ -38,7 +37,7 @@ class TimeoutScreen(BaseScreen):
 
     def next(self) -> "BaseScreen":
         print('Timeout screen found, clicking "no thanks" button')
-        click_on(NO_THANKS_BUTTON_SPRITE)
+        Screenshot.take().click_on(NO_THANKS_BUTTON_SPRITE)
 
         NextScreen = self.determine_next_screen()
         return NextScreen()

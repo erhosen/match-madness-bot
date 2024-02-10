@@ -1,33 +1,17 @@
 import time
 
-from PIL.Image import Image
-
-from helpers.utils import click, take_screenshot, pixel_matches_color
+from helpers.screenshot import Screenshot
+from helpers.utils import open_image
 from screen._base import BaseScreen
 
 
+NEXT_BUTTON_SPRITE = open_image("sprites/next_button.png")
+
+
 class FinishScreen(BaseScreen):
-    NEXT_BUTTON = 480, 756
-
-    LOGO_PIXEL = 530, 380
-
-    DUOLINGO_LIGHT_ORANGE = (215, 108, 35)
-    DUOLINGO_LIGHT_RED = (219, 98, 95)
-    DUOLINGO_WHITE = (255, 255, 255)
-
     @classmethod
-    def is_current(cls, screenshot: Image) -> bool:
-        return (
-            pixel_matches_color(
-                cls.LOGO_PIXEL,
-                cls.DUOLINGO_LIGHT_ORANGE,
-                image=screenshot,
-                threshold=20,
-            )
-            or pixel_matches_color(
-                cls.LOGO_PIXEL, cls.DUOLINGO_LIGHT_RED, image=screenshot, threshold=20
-            )
-        ) and pixel_matches_color(cls.NEXT_BUTTON, cls.DUOLINGO_WHITE, image=screenshot)
+    def is_current(cls, screenshot: Screenshot) -> bool:
+        return NEXT_BUTTON_SPRITE in screenshot
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
@@ -38,7 +22,7 @@ class FinishScreen(BaseScreen):
 
         for _ in range(30):
             time.sleep(1)
-            screenshot = take_screenshot()
+            screenshot = Screenshot.take()
 
             if IntermediateScreen.is_current(screenshot):
                 return IntermediateScreen
@@ -52,14 +36,7 @@ class FinishScreen(BaseScreen):
         raise ValueError("Can't determine next screen")
 
     def next(self):
-        click(*self.NEXT_BUTTON)
+        Screenshot.take().click_on(NEXT_BUTTON_SPRITE)
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
-
-
-if __name__ == "__main__":
-    _screen = FinishScreen()
-    _screenshot = take_screenshot()
-    _is_current = _screen.is_current(_screenshot)
-    print(_is_current)

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from PIL.Image import Image
+from helpers.screenshot import Screenshot
 
 
 class BaseScreen(ABC):
@@ -9,7 +9,12 @@ class BaseScreen(ABC):
 
     @classmethod
     @abstractmethod
-    def is_current(cls, screenshot: Image):
+    def is_current(cls, screenshot: Screenshot) -> bool:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def determine_next_screen(cls) -> type["BaseScreen"]:
         pass
 
     @abstractmethod

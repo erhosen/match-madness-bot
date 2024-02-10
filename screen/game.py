@@ -1,16 +1,14 @@
 import time
 from functools import partial
 
-from PIL.Image import Image
 
 from helpers.constants import Language, LEVELS_CONFIG
 from helpers.match_madness import MatchMadness, NoTranslationFound
+from helpers.screenshot import Screenshot
 from screen._base import BaseScreen
-from helpers.utils import (
-    take_screenshot,
-    pixel_matches_color,
-    click,
-)
+from helpers.utils import open_image
+
+EXIT_CROSS_SPRITE = open_image("sprites/exit_cross.png")
 
 
 class GameScreen(BaseScreen):
@@ -23,29 +21,18 @@ class GameScreen(BaseScreen):
         )
         super().__init__()
 
-    EXIT_BUTTON = (115, 28)
-    PRESS_PAIRS_TEXT = (221, 145)
-    DUOLINGO_WHITE = (255, 255, 255)
-    DUOLINGO_GRAY = (88, 102, 110)
-
     @classmethod
-    def is_current(cls, screenshot: Image) -> bool:
-        is_pairs_text_white = pixel_matches_color(
-            cls.PRESS_PAIRS_TEXT, cls.DUOLINGO_WHITE, image=screenshot
-        )
-        is_exit_button_gray = pixel_matches_color(
-            cls.EXIT_BUTTON, cls.DUOLINGO_GRAY, image=screenshot
-        )
-        return is_pairs_text_white and is_exit_button_gray
+    def is_current(cls, screenshot: Screenshot) -> bool:
+        return EXIT_CROSS_SPRITE in screenshot
 
-    def determine_next_screen(self) -> type[BaseScreen] | partial[BaseScreen]:
+    def determine_next_screen(self):
         from screen.attention import AttentionScreen
         from screen.timeout import TimeoutScreen
         from screen.wait_where_are_you import WaitWhereAreYouScreen
 
         for _ in range(20):
             time.sleep(1)
-            screenshot = take_screenshot()
+            screenshot = Screenshot.take()
 
             if AttentionScreen.is_current(screenshot):
                 # return partial because we need to pass lvl and chapter
@@ -63,7 +50,7 @@ class GameScreen(BaseScreen):
                 iterations=LEVELS_CONFIG[self.lvl][self.chapter]
             )
         except NoTranslationFound:
-            click(*self.EXIT_BUTTON)
+            Screenshot.take().click_on(EXIT_CROSS_SPRITE)
             print("No translation found, trying to continue...")
 
         NextScreen = self.determine_next_screen()

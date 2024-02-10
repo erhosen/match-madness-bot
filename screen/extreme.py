@@ -1,32 +1,35 @@
 import time
 
-from PIL.Image import Image
-
-from helpers.utils import click, pixel_matches_color
+from helpers.screenshot import Screenshot
+from helpers.utils import open_image
 from screen._base import BaseScreen
 
 
-class ExtremeScreen(BaseScreen):
-    LOGO_PIXEL = 550, 370
-    START_BUTTON = 666, 746
+START_BUTTON_SPRITE = open_image("sprites/start_button.png")
 
-    DUOLINGO_ORANGE = (240, 120, 43)
-    DUOLINGO_WHITE = (255, 255, 255)
+
+class ExtremeScreen(BaseScreen):
+    @classmethod
+    def is_current(cls, screenshot: Screenshot) -> bool:
+        return START_BUTTON_SPRITE in screenshot
 
     @classmethod
-    def is_current(cls, screenshot: Image):
-        # should have an orange logo in the middle and a white start button
-        return pixel_matches_color(
-            cls.LOGO_PIXEL, cls.DUOLINGO_ORANGE, image=screenshot
-        ) and pixel_matches_color(
-            cls.START_BUTTON, cls.DUOLINGO_WHITE, image=screenshot
-        )
-
-    def next(self):
+    def determine_next_screen(cls) -> type[BaseScreen]:
         from screen.start import StartScreen
 
-        print("Extreme screen found, clicking start button")
-        click(*self.START_BUTTON)
-        time.sleep(6)
+        for _ in range(20):
+            time.sleep(1)
+            screenshot = Screenshot.take()
 
-        return StartScreen()
+            if StartScreen.is_current(screenshot):
+                return StartScreen
+
+        raise ValueError("Can't determine next screen")
+
+    def next(self):
+        print("Extreme screen found, clicking start button")
+
+        Screenshot.take().click_on(START_BUTTON_SPRITE)
+
+        NextScreen = self.determine_next_screen()
+        return NextScreen()

@@ -1,11 +1,11 @@
-from helpers.utils import take_screenshot
+from helpers.screenshot import Screenshot
 from screen._base import BaseScreen
 from screen.start import StartScreen
 from screen.wait_where_are_you import WaitWhereAreYouScreen
 
 
 def determine_current_screen() -> type[BaseScreen]:
-    screenshot = take_screenshot()
+    screenshot = Screenshot.take()
     for screen_cls in [StartScreen, WaitWhereAreYouScreen]:
         if screen_cls.is_current(screenshot):
             return screen_cls
@@ -40,5 +40,4 @@ if __name__ == "__main__":
 # TODO: Rich, чтобы было красиво
 # TODO: Typer, чтобы было удобно
 # TODO: IntermediateScreen / ExtremeScreen collision
-# TODO: Screens collision in general. Stop using pixel_matches_color, use image matching instead
 # TODO: Make sure it works fine on different screens / resolutions

@@ -1,8 +1,7 @@
 import time
 
-from PIL.Image import Image
-
-from helpers.utils import take_screenshot, open_image, click_on, has_sprite
+from helpers.screenshot import Screenshot
+from helpers.utils import open_image
 from screen._base import BaseScreen
 
 
@@ -11,8 +10,8 @@ EXIT_BUTTON_SPRITE = open_image("sprites/exit_button.png")
 
 class WaitWhereAreYouScreen(BaseScreen):
     @classmethod
-    def is_current(cls, screenshot: Image) -> bool:
-        return has_sprite(EXIT_BUTTON_SPRITE, screenshot)
+    def is_current(cls, screenshot: Screenshot) -> bool:
+        return EXIT_BUTTON_SPRITE in screenshot
 
     @classmethod
     def determine_next_screen(cls) -> type[BaseScreen]:
@@ -21,7 +20,7 @@ class WaitWhereAreYouScreen(BaseScreen):
 
         for _ in range(20):
             time.sleep(1)
-            screenshot = take_screenshot()
+            screenshot = Screenshot.take()
 
             if FinishScreen.is_current(screenshot):
                 return FinishScreen
@@ -31,16 +30,7 @@ class WaitWhereAreYouScreen(BaseScreen):
         raise ValueError("Can't determine next screen")
 
     def next(self) -> "BaseScreen":
-        click_on(EXIT_BUTTON_SPRITE)
+        Screenshot.take().click_on(EXIT_BUTTON_SPRITE)
 
         NextScreen = self.determine_next_screen()
         return NextScreen()
-
-
-if __name__ == "__main__":
-    _screen = WaitWhereAreYouScreen()
-    _screenshot = take_screenshot()
-    print(_screen.is_current(_screenshot))
-
-    # exit_button_sprite = _screenshot.crop((300, 730, 385, 760))
-    # save_image(exit_button_sprite, "sprites/exit_button.png")
