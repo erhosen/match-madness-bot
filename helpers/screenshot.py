@@ -40,6 +40,9 @@ class Screenshot:
         central_point = self._locate_sprite(sprite)
         return bool(central_point)
 
+    def crop(self, box: tuple[int, int, int, int]) -> Image.Image:
+        return self.image.crop(box)
+
     def save(self, filename: str) -> None:
         self.image.save(IMAGES_DIR / filename)
 

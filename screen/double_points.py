@@ -3,7 +3,7 @@ from helpers.utils import open_image
 from screen._base import BaseScreen
 
 
-BUY_DOUBLE_POINTS = True
+BUY_DOUBLE_POINTS = False
 
 NO_THANKS_BUTTON_SPRITE = open_image("sprites/no_thanks_button.png")
 BUY_DOUBLE_POINTS_BUTTON_SPRITE = open_image("sprites/buy_double_points_button.png")

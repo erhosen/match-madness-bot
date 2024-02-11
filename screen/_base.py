@@ -1,5 +1,5 @@
 import time
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Callable
 
 from helpers.screenshot import Screenshot
@@ -45,6 +45,14 @@ class BaseScreen(ABC):
 
         raise ValueError("Can't determine next screen")
 
-    @abstractmethod
-    def next(self) -> "BaseScreen":
-        pass
+    @classmethod
+    def next(cls) -> "BaseScreen":
+        if cls.sprite is None or not cls.next_screens:
+            raise NotImplementedError(
+                "You must define a sprite and next_screens for this screen, or override this method"
+            )
+
+        Screenshot.take().click_on(cls.sprite)
+        NextScreen = cls.determine_next_screen()  # noqa
+
+        return NextScreen()

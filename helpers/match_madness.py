@@ -96,7 +96,7 @@ class MatchMadness:
         self.tesaurus = Tesaurus(f"{lang_left.value}-{lang_right.value}.json")
 
     @staticmethod
-    def get_images(screenshot: Image):
+    def get_images(screenshot: Screenshot):
         x0_left = 290
         x1_left = x0_left + TILE_WIDTH
         x0_right = 615
@@ -117,7 +117,7 @@ class MatchMadness:
 
     def load(self):
         screenshot = Screenshot.take()
-        left_images, right_images = self.get_images(screenshot.image)
+        left_images, right_images = self.get_images(screenshot)
         self.left_keyboard.load(left_images)
         self.right_keyboard.load(right_images)
 
@@ -168,6 +168,6 @@ class MatchMadness:
                     return
 
                 screenshot = Screenshot.take()
-                left_images, right_images = self.get_images(screenshot.image)
+                left_images, right_images = self.get_images(screenshot)
                 self.left_keyboard.reload(left_images)
                 self.right_keyboard.reload(right_images)

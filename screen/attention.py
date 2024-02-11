@@ -30,5 +30,5 @@ class AttentionScreen(BaseScreen):
             time.sleep(0.4)
             return GameScreen(lvl=self.lvl, chapter=self.chapter)
 
-        NextScreen = self.determine_next_screen()
-        return NextScreen()
+        NextScreen = self.determine_next_screen()  # noqa
+        return NextScreen()  # type: ignore

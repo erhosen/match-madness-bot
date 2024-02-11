@@ -1,9 +1,5 @@
-from helpers.screenshot import Screenshot
 from helpers.utils import open_image
 from screen._base import BaseScreen
-
-
-NEXT_BUTTON_SPRITE = open_image("sprites/next_button.png")
 
 
 class FinishScreen(BaseScreen):
@@ -14,8 +10,3 @@ class FinishScreen(BaseScreen):
         "ExtremeScreen",
         "RateUsScreen",
     ]
-
-    def next(self):
-        Screenshot.take().click_on(NEXT_BUTTON_SPRITE)
-        NextScreen = self.determine_next_screen()
-        return NextScreen()

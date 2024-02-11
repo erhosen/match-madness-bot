@@ -14,11 +14,11 @@ class StartScreen(BaseScreen):
 
     @staticmethod
     def determine_lvl(screenshot: Screenshot) -> int:
-        lvl1_checkbox = screenshot.image.crop((230, 475, 260, 500))
-        lvl2_checkbox = screenshot.image.crop((370, 475, 400, 500))
-        lvln_checkbox = screenshot.image.crop((510, 475, 540, 500))
-        lvl8_checkbox = screenshot.image.crop((650, 475, 680, 500))
-        lvl9_checkbox = screenshot.image.crop((790, 475, 820, 500))
+        lvl1_checkbox = screenshot.crop((230, 475, 260, 500))
+        lvl2_checkbox = screenshot.crop((370, 475, 400, 500))
+        lvln_checkbox = screenshot.crop((510, 475, 540, 500))
+        lvl8_checkbox = screenshot.crop((650, 475, 680, 500))
+        lvl9_checkbox = screenshot.crop((790, 475, 820, 500))
 
         for checkbox in (
             lvl1_checkbox,
