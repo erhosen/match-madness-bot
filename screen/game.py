@@ -1,7 +1,3 @@
-import time
-from functools import partial
-
-
 from helpers.constants import Language, LEVELS_CONFIG
 from helpers.match_madness import MatchMadness, NoTranslationFound
 from helpers.screenshot import Screenshot
@@ -12,6 +8,9 @@ EXIT_CROSS_SPRITE = open_image("sprites/exit_cross.png")
 
 
 class GameScreen(BaseScreen):
+    sprite = open_image("sprites/exit_cross.png")
+    next_screens = ["AttentionScreen", "TimeoutScreen", "WaitWhereAreYouScreen"]
+
     def __init__(self, lvl: int, chapter: int):
         self.lvl = lvl
         self.chapter = chapter
@@ -20,29 +19,6 @@ class GameScreen(BaseScreen):
             lang_left=Language.RUS, lang_right=Language.DEU
         )
         super().__init__()
-
-    @classmethod
-    def is_current(cls, screenshot: Screenshot) -> bool:
-        return EXIT_CROSS_SPRITE in screenshot
-
-    def determine_next_screen(self):
-        from screen.attention import AttentionScreen
-        from screen.timeout import TimeoutScreen
-        from screen.wait_where_are_you import WaitWhereAreYouScreen
-
-        for _ in range(20):
-            time.sleep(1)
-            screenshot = Screenshot.take()
-
-            if AttentionScreen.is_current(screenshot):
-                # return partial because we need to pass lvl and chapter
-                return partial(AttentionScreen, lvl=self.lvl, chapter=self.chapter + 1)
-            elif TimeoutScreen.is_current(screenshot):
-                return TimeoutScreen
-            elif WaitWhereAreYouScreen.is_current(screenshot):
-                return WaitWhereAreYouScreen
-
-        raise ValueError("Can't determine next screen")
 
     def next(self):
         try:
@@ -53,5 +29,8 @@ class GameScreen(BaseScreen):
             Screenshot.take().click_on(EXIT_CROSS_SPRITE)
             print("No translation found, trying to continue...")
 
-        NextScreen = self.determine_next_screen()
-        return NextScreen()
+        NextScreen = self.determine_next_screen()  # noqa
+        if NextScreen.__name__ == "AttentionScreen":
+            return NextScreen(lvl=self.lvl, chapter=self.chapter + 1)  # type: ignore
+
+        return NextScreen()  # type: ignore

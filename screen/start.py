@@ -9,9 +9,8 @@ BIG_START_BUTTON_SPRITE = open_image("sprites/big_start_button.png")
 
 
 class StartScreen(BaseScreen):
-    START_BUTTON = 450, 756
-
-    DUOLINGO_WHITE = (255, 255, 255)
+    sprite = open_image("sprites/big_start_button.png")
+    next_screens = ["AttentionScreen", "DoublePointsScreen"]
 
     @staticmethod
     def determine_lvl(screenshot: Screenshot) -> int:
@@ -34,16 +33,6 @@ class StartScreen(BaseScreen):
         raise ValueError("Can't determine level")
 
     @classmethod
-    def is_current(cls, screenshot: Screenshot) -> bool:
-        try:
-            # we can determine lvl only if we are on start screen
-            cls.determine_lvl(screenshot)
-            # if we can determine lvl, one additional check that we have a big start button
-            return BIG_START_BUTTON_SPRITE in screenshot
-        except ValueError:
-            return False
-
-    @classmethod
     def _determine_lvl(cls, attempts=5) -> int:
         for _ in range(attempts):
             screenshot = Screenshot.take()
@@ -57,22 +46,6 @@ class StartScreen(BaseScreen):
                 continue
 
         raise ValueError("Can't determine level")
-
-    @classmethod
-    def determine_next_screen(cls) -> type[BaseScreen]:
-        from screen.double_points import DoublePointsScreen
-        from screen.attention import AttentionScreen
-
-        for _ in range(20):
-            time.sleep(1)
-            screenshot = Screenshot.take()
-
-            if DoublePointsScreen.is_current(screenshot):
-                return DoublePointsScreen
-            elif AttentionScreen.is_current(screenshot):
-                return AttentionScreen
-
-        raise ValueError("Can't determine next screen")
 
     def next(self):
         """Click on start button.

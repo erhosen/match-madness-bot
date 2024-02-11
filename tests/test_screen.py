@@ -65,3 +65,44 @@ def test_is_current_screen(
 def test_start_screen_determine_lvl(filename: str, expected_lvl: int) -> None:
     screenshot = Screenshot.open(filename)
     assert StartScreen.determine_lvl(screenshot) == expected_lvl
+
+
+@pytest.mark.parametrize(
+    "screen,filename,expected_next_screen",
+    [
+        (WaitWhereAreYouScreen, "screen/_start_1.png", StartScreen),
+        (WaitWhereAreYouScreen, "screen/_finish.png", FinishScreen),
+        (TimeoutScreen, "screen/_start_1.png", StartScreen),
+        (TimeoutScreen, "screen/_wait_where_are_you.png", WaitWhereAreYouScreen),
+        (StartScreen, "screen/_attention_1.png", AttentionScreen),
+        (StartScreen, "screen/_double_points.png", DoublePointsScreen),
+        (RateUsScreen, "screen/_start_1.png", StartScreen),
+        (RateUsScreen, "screen/_intermediate_1.png", IntermediateScreen),
+        (RateUsScreen, "screen/_extreme.png", ExtremeScreen),
+        (IntermediateScreen, "screen/_start_1.png", StartScreen),
+        (IntermediateScreen, "screen/_intermediate_1.png", IntermediateScreen),
+        (IntermediateScreen, "screen/_extreme.png", ExtremeScreen),
+        (GameScreen, "screen/_attention_1.png", AttentionScreen),
+        (GameScreen, "screen/_timeout.png", TimeoutScreen),
+        (GameScreen, "screen/_wait_where_are_you.png", WaitWhereAreYouScreen),
+        (FinishScreen, "screen/_start_12.png", StartScreen),
+        (FinishScreen, "screen/_intermediate_1.png", IntermediateScreen),
+        (FinishScreen, "screen/_extreme.png", ExtremeScreen),
+        # (FinishScreen, "screen/_rate_us.png", RateUsScreen),  # Collision with ExtremeScreen
+        (ExtremeScreen, "screen/_start_1.png", StartScreen),
+        (DoublePointsScreen, "screen/_attention_1.png", AttentionScreen),
+        (AttentionScreen, "screen/_finish.png", FinishScreen),
+        (AttentionScreen, "screen/_wait_where_are_you.png", WaitWhereAreYouScreen),
+        # (AttentionScreen, "screen/_game.png", GameScreen),  # Done manually for now
+    ],
+)
+def test_determine_next_screen(
+    screen: type[BaseScreen], filename: str, expected_next_screen: type[BaseScreen]
+) -> None:
+    assert (
+        screen.determine_next_screen(
+            screenshot_fn=lambda: Screenshot.open(filename),
+            sleep_fn=lambda _: None,
+        )
+        == expected_next_screen
+    )

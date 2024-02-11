@@ -9,30 +9,16 @@ NEXT_BUTTON_SPRITE = open_image("sprites/next_button.png")
 
 
 class AttentionScreen(BaseScreen):
+    sprite = open_image("sprites/next_button.png")
+    next_screens = [
+        "FinishScreen",
+        "WaitWhereAreYouScreen",
+    ]
+
     def __init__(self, lvl: int, chapter: int):
         self.lvl = lvl
         self.chapter = chapter
         super().__init__()
-
-    @classmethod
-    def is_current(cls, screenshot: Screenshot) -> bool:
-        return NEXT_BUTTON_SPRITE in screenshot
-
-    @classmethod
-    def determine_next_screen(cls) -> type[BaseScreen]:
-        from screen.finish import FinishScreen
-        from screen.wait_where_are_you import WaitWhereAreYouScreen
-
-        for _ in range(20):
-            time.sleep(1)
-            screenshot = Screenshot.take()
-
-            if FinishScreen.is_current(screenshot):
-                return FinishScreen
-            elif WaitWhereAreYouScreen.is_current(screenshot):
-                return WaitWhereAreYouScreen
-
-        raise ValueError("Can't determine next screen")
 
     def next(self):
         from screen.game import GameScreen
