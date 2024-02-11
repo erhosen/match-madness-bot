@@ -38,3 +38,4 @@ if __name__ == "__main__":
 # TODO: Rich, чтобы было красиво
 # TODO: Typer, чтобы было удобно
 # TODO: Screen collisions in general: worth to consider?
+# TODO: Sprite cls with caching instead of open_image
