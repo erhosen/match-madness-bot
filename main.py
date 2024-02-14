@@ -1,7 +1,6 @@
 from helpers.screenshot import Screenshot
 from screen._base import BaseScreen
-from screen.start import StartScreen
-from screen.wait_where_are_you import WaitWhereAreYouScreen
+from screen import StartScreen, WaitWhereAreYouScreen
 
 
 def determine_current_screen() -> type[BaseScreen]:

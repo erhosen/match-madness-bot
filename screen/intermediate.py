@@ -1,11 +1,10 @@
-from helpers.screenshot import Screenshot
-from helpers.utils import open_image
+from helpers.screenshot import Screenshot, Sprite
 from screen._base import BaseScreen
 
 
-NEXT_TIME_BUTTON_SPRITE = open_image("sprites/next_time_button.png")
-CONTINUE_BUTTON_SPRITE = open_image("sprites/continue_button.png")
-NEXT_BUTTON_SPRITE = open_image("sprites/next_button.png")
+NEXT_TIME_BUTTON_SPRITE = Sprite.open("next_time_button.png")
+CONTINUE_BUTTON_SPRITE = Sprite.open("continue_button.png")
+NEXT_BUTTON_SPRITE = Sprite.open("next_button.png")
 
 
 class IntermediateScreen(BaseScreen):
@@ -14,14 +13,14 @@ class IntermediateScreen(BaseScreen):
     @classmethod
     def is_current(cls, screenshot: Screenshot) -> bool:
         return (
-            NEXT_TIME_BUTTON_SPRITE in screenshot
-            or CONTINUE_BUTTON_SPRITE in screenshot
-            or NEXT_BUTTON_SPRITE in screenshot
+            screenshot.has_sprite(NEXT_TIME_BUTTON_SPRITE)
+            or screenshot.has_sprite(CONTINUE_BUTTON_SPRITE)
+            or screenshot.has_sprite(NEXT_BUTTON_SPRITE)
         )
 
     def next(self):
         print("Intermediate screen found, clicking next button")
-        Screenshot.take().click_on(CONTINUE_BUTTON_SPRITE)
+        Screenshot.take().click_on(CONTINUE_BUTTON_SPRITE.image)
         NextScreen = self.determine_next_screen()
         return NextScreen()
 

@@ -18,6 +18,19 @@ def center(box: Box) -> Point:
     return Point(x=center_x, y=center_y)
 
 
+class Sprite:
+    def __init__(self, image: Image.Image):
+        self.image = image
+
+    def save(self, filename: str) -> None:
+        self.image.save(IMAGES_DIR / "sprites" / filename)
+
+    @classmethod
+    def open(cls, filename: str) -> "Sprite":
+        image = Image.open(IMAGES_DIR / "sprites" / filename)
+        return cls(image)
+
+
 class Screenshot:
     def __init__(self, image: Image.Image):
         self.image = image
@@ -36,12 +49,15 @@ class Screenshot:
         except pyautogui.ImageNotFoundException:
             return None
 
-    def __contains__(self, sprite: Image.Image) -> bool:
-        central_point = self._locate_sprite(sprite)
-        return bool(central_point)
+    def has_sprite(self, sprite: Sprite, confidence: float = 0.9) -> bool:
+        return bool(self._locate_sprite(sprite.image, confidence))
 
     def crop(self, box: tuple[int, int, int, int]) -> Image.Image:
         return self.image.crop(box)
+
+    def crop_v2(self, box: tuple[int, int, int, int]) -> Sprite:
+        cropped = self.image.crop(box)
+        return Sprite(cropped)
 
     def save(self, filename: str) -> None:
         self.image.save(IMAGES_DIR / filename)

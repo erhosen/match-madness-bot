@@ -1,6 +1,6 @@
 from helpers.constants import Language, LEVELS_CONFIG
 from helpers.match_madness import MatchMadness, NoTranslationFound
-from helpers.screenshot import Screenshot
+from helpers.screenshot import Screenshot, Sprite
 from screen._base import BaseScreen
 from helpers.utils import open_image
 
@@ -8,7 +8,8 @@ EXIT_CROSS_SPRITE = open_image("sprites/exit_cross.png")
 
 
 class GameScreen(BaseScreen):
-    sprite = open_image("sprites/exit_cross.png")
+    look_for_sprite = Sprite.open("exit_cross.png")
+    click_on_sprite = Sprite.open("exit_cross.png")
     next_screens = ["AttentionScreen", "TimeoutScreen", "WaitWhereAreYouScreen"]
 
     def __init__(self, lvl: int, chapter: int):

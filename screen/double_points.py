@@ -1,4 +1,4 @@
-from helpers.screenshot import Screenshot
+from helpers.screenshot import Screenshot, Sprite
 from helpers.utils import open_image
 from screen._base import BaseScreen
 
@@ -10,7 +10,8 @@ BUY_DOUBLE_POINTS_BUTTON_SPRITE = open_image("sprites/buy_double_points_button.p
 
 
 class DoublePointsScreen(BaseScreen):
-    sprite = open_image("sprites/buy_double_points_button.png")
+    look_for_sprite = Sprite.open("buy_double_points_button.png")
+    click_on_sprite = Sprite.open("buy_double_points_button.png")
     next_screens = [
         "AttentionScreen",
     ]

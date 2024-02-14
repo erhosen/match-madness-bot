@@ -1,7 +1,8 @@
-from helpers.utils import open_image
+from helpers.screenshot import Sprite
 from screen._base import BaseScreen
 
 
 class WaitWhereAreYouScreen(BaseScreen):
-    sprite = open_image("sprites/exit_button.png")
+    look_for_sprite = Sprite.open("exit_button.png")
+    click_on_sprite = Sprite.open("exit_button.png")
     next_screens = ["StartScreen", "FinishScreen"]

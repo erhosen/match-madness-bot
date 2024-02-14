@@ -1,15 +1,15 @@
 import time
 
 from helpers.ocr import recognize_number
-from helpers.screenshot import Screenshot
+from helpers.screenshot import Screenshot, Sprite
 from screen._base import BaseScreen
-from helpers.utils import open_image
 
-BIG_START_BUTTON_SPRITE = open_image("sprites/big_start_button.png")
+BIG_START_BUTTON_SPRITE = Sprite.open("big_start_button.png")
 
 
 class StartScreen(BaseScreen):
-    sprite = open_image("sprites/big_start_button.png")
+    look_for_sprite = Sprite.open("big_start_button.png")
+    click_on_sprite = Sprite.open("big_start_button.png")
     next_screens = ["AttentionScreen", "DoublePointsScreen"]
 
     @staticmethod
@@ -56,7 +56,7 @@ class StartScreen(BaseScreen):
 
         print(f"Level {lvl}, let's go!")
 
-        Screenshot.take().click_on(BIG_START_BUTTON_SPRITE)
+        Screenshot.take().click_on(BIG_START_BUTTON_SPRITE.image)
 
         NextScreen = self.determine_next_screen()  # noqa
         return NextScreen(lvl=lvl, chapter=0)  # type: ignore

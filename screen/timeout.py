@@ -1,7 +1,8 @@
-from helpers.utils import open_image
+from helpers.screenshot import Sprite
 from screen._base import BaseScreen
 
 
 class TimeoutScreen(BaseScreen):
-    sprite = open_image("sprites/no_thanks_button.png")
+    look_for_sprite = Sprite.open("no_thanks_button.png")
+    click_on_sprite = Sprite.open("no_thanks_button.png")
     next_screens = ["StartScreen", "WaitWhereAreYouScreen"]

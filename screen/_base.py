@@ -2,11 +2,12 @@ import time
 from abc import ABC
 from typing import Callable
 
-from helpers.screenshot import Screenshot
+from helpers.screenshot import Screenshot, Sprite
 
 
 class BaseScreen(ABC):
-    sprite = None
+    look_for_sprite: Sprite | None = None
+    click_on_sprite: Sprite | None = None
     next_screens: list[str] = []
 
     def __init__(self):
@@ -14,12 +15,12 @@ class BaseScreen(ABC):
 
     @classmethod
     def is_current(cls, screenshot: Screenshot) -> bool:
-        if cls.sprite is None:
+        if cls.look_for_sprite is None:
             raise NotImplementedError(
-                "You must define a sprite for this screen, or override this method"
+                "You must define a look_for_sprite for the screen, or override this method"
             )
 
-        return cls.sprite in screenshot
+        return screenshot.has_sprite(cls.look_for_sprite)
 
     @classmethod
     def determine_next_screen(
@@ -27,7 +28,7 @@ class BaseScreen(ABC):
     ) -> type["BaseScreen"]:
         if not cls.next_screens:
             raise NotImplementedError(
-                "You must define next_screens for this screen, or override this method"
+                "You must define next_screens for the screen, or override this method"
             )
 
         next_screen_classes = [
@@ -47,12 +48,12 @@ class BaseScreen(ABC):
 
     @classmethod
     def next(cls) -> "BaseScreen":
-        if cls.sprite is None or not cls.next_screens:
+        if cls.click_on_sprite is None:
             raise NotImplementedError(
-                "You must define a sprite and next_screens for this screen, or override this method"
+                "You must define a click_on_sprite for the screen, or override this method"
             )
 
-        Screenshot.take().click_on(cls.sprite)
+        Screenshot.take().click_on(cls.click_on_sprite.image)
         NextScreen = cls.determine_next_screen()  # noqa
 
         return NextScreen()
